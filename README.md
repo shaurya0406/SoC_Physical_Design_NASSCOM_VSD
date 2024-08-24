@@ -447,6 +447,11 @@ The RTL to GDSII flow represents the steps taken to transform a design from a hi
   - **Objective**: Confirm that all timing constraints are met to ensure proper operation at the target clock frequency.
 - **Tools**: Magic, OpenSTA.
 
+### 7. Export GDSII 
+In this step, the final layout of the design is exported in the GDSII format, which is the industry-standard file format for IC layout data. This file contains all the necessary geometric shapes, layer information, and other essential data needed for fabricating the ASIC.
+
+The command to export the GDSII file in OpenLANE typically involves finalizing the layout after routing and performing sign-off checks to ensure there are no violations. Once the checks pass, the GDSII file is generated and ready for tape-out.
+
 ## Additional Concepts
 
 ### Standard Cell Libraries
