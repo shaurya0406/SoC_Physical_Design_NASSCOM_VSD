@@ -366,6 +366,7 @@ To begin working with OpenLane, follow these steps:
    - [4. Clock Tree Synthesis (CTS)](#4-clock-tree-synthesis-cts)
    - [5. Routing](#5-routing)
    - [6. Sign-Off and Verification](#6-sign-off-and-verification)
+   - [7. Export GDSII](#7-export-gdsii)
 4. [Additional Concepts](#additional-concepts)
    - [Standard Cell Libraries](#standard-cell-libraries)
    - [Process Design Kit (PDK)](#process-design-kit-pdk)
