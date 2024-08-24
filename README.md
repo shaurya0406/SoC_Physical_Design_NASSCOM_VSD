@@ -655,3 +655,117 @@ flow.tcl -design <your_design>
 
 4. **Check the results**:
    - Review the generated GDSII and reports for DRC, LVS, and timing.
+
+
+# # Day 1: SK2 | Lecture 4 - OpenLANE ASIC Design Flow
+
+### 1. **Introduction**
+   OpenLANE is an open-source ASIC flow designed to automate the process of converting an RTL design into a GDSII layout, suitable for fabrication. It integrates various open-source tools and follows a series of steps to ensure a clean, manufacturable design.
+
+### 2. **Prerequisites**
+   - Install Docker and ensure it's running.
+   - Clone the OpenLANE repository from GitHub:
+     ```bash
+     git clone https://github.com/The-OpenROAD-Project/OpenLane.git
+     cd OpenLane
+     make mount
+     ```
+   - Install dependencies as outlined in the repository's README.
+
+### 3. **ASIC Design Flow Overview**
+
+#### 3.1 **RTL Synthesis**
+   - **Objective**: Translate the RTL code into a gate-level netlist using standard cells.
+   - **Tool**: Yosys
+   - **Commands**:
+     ```bash
+     cd designs/<your_design>
+     flow.tcl -design <your_design> -run_synthesis
+     ```
+   - **Important Concepts**:
+     - **Standard Cells**: Pre-designed, pre-verified circuit elements used in ASIC design.
+     - **Synthesis Strategies**: Different optimization techniques applied during synthesis, aiming to minimize area or improve timing.
+
+#### 3.2 **Design Exploration**
+   - **Objective**: Explore various design configurations to determine the best synthesis strategy.
+   - **Commands**:
+     ```bash
+     flow.tcl -design <your_design> -run_synth_explore
+     ```
+   - **Report**: Generates a report on how different strategies impact area, delay, and violations.
+
+#### 3.3 **Testing Structure Insertion**
+   - **Objective**: Prepare the design for post-fabrication testing by inserting scan chains and other test structures.
+   - **Tool**: Fault
+   - **Optional Step**: Enable if required for your design.
+
+#### 3.4 **Physical Implementation**
+   - **Objective**: Convert the synthesized netlist into a physical layout.
+   - **Tools**: OpenROAD, TritonRoute
+   - **Sub-Steps**:
+     - **Floor and Power Planning**: Define the layout area and distribute power efficiently.
+     - **Placement**: Arrange the cells in the layout.
+     - **Clock Tree Synthesis**: Create a balanced clock distribution network.
+     - **Routing**: Connect the cells with metal wires.
+     - **Commands**:
+       ```bash
+       flow.tcl -design <your_design> -run_floorplan
+       flow.tcl -design <your_design> -run_place
+       flow.tcl -design <your_design> -run_cts
+       flow.tcl -design <your_design> -run_route
+       ```
+
+#### 3.5 **Antenna Rule Violation Handling**
+   - **Objective**: Prevent damage to transistor gates during fabrication by managing long wire segments that can act as antennas.
+   - **Solution Approaches**:
+     - **Bridging**: Elevating the wire to higher metal layers.
+     - **Inserting Antenna Diodes**: Adding diodes to dissipate charges.
+   - **Commands**:
+     ```bash
+     flow.tcl -design <your_design> -run_antennacheck
+     ```
+
+#### 3.6 **Sign-Off**
+   - **Objective**: Ensure the design is ready for fabrication with no design rule violations or timing issues.
+   - **Tools**: Magic, OpenSTA, netgen
+   - **Sub-Steps**:
+     - **DRC (Design Rule Checking)**: Verify the layout conforms to the manufacturing rules.
+     - **LVS (Layout vs. Schematic)**: Ensure the layout matches the original schematic.
+     - **Timing Analysis**: Verify timing constraints are met.
+     - **Commands**:
+       ```bash
+       flow.tcl -design <your_design> -run_drc
+       flow.tcl -design <your_design> -run_lvs
+       flow.tcl -design <your_design> -run_timing
+       ```
+
+### 4. **Step 7: Export GDSII**
+   - **Objective**: Export the final layout in the GDSII format.
+   - **Commands**:
+     ```bash
+     flow.tcl -design <your_design> -run_export_gdsii
+     ```
+   - **Output**: A GDSII file, ready for tape-out and fabrication.
+
+### 5. **Important Concepts Explained**
+
+#### 5.1 **PDK (Process Design Kit)**
+   - A set of files used to model a semiconductor fabrication process for EDA tools. In OpenLANE, the SkyWater 130nm PDK is often used.
+
+#### 5.2 **Standard Cells**
+   - Pre-designed, pre-verified circuit elements that serve as the building blocks for digital circuits.
+
+#### 5.3 **Design Rule Checking (DRC)**
+   - A step in sign-off where the physical layout is checked against manufacturing rules to ensure it can be produced without issues.
+
+#### 5.4 **Layout vs. Schematic (LVS)**
+   - A verification step that ensures the physical layout matches the intended design at the circuit level.
+
+### 6. **Running the Flow**
+
+To run the full flow:
+```bash
+cd designs/<your_design>
+flow.tcl -design <your_design>
+```
+This command will execute all the steps, from synthesis to GDSII export, and produce the final layout.
