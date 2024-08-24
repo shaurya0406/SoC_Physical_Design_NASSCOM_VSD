@@ -353,3 +353,130 @@ To begin working with OpenLane, follow these steps:
 - [OpenROAD Project](https://theopenroadproject.org/)
 - [Qflow Documentation](http://opencircuitdesign.com/qflow/index.html)
 - [Magic VLSI Layout Tool](http://opencircuitdesign.com/magic/)
+
+# Day 1: SK2 | Lecture 2 - Simplified RTL to GDSII Flow for ASIC Design
+
+## Table of Contents
+1. [Introduction](#introduction)
+2. [Overview of the RTL to GDSII Flow](#overview-of-the-rtl-to-gdsii-flow)
+3. [Major Steps in the ASIC Design Flow](#major-steps-in-the-asic-design-flow)
+   - [1. Synthesis](#1-synthesis)
+   - [2. Floorplanning](#2-floorplanning)
+   - [3. Placement](#3-placement)
+   - [4. Clock Tree Synthesis (CTS)](#4-clock-tree-synthesis-cts)
+   - [5. Routing](#5-routing)
+   - [6. Sign-Off and Verification](#6-sign-off-and-verification)
+4. [Additional Concepts](#additional-concepts)
+   - [Standard Cell Libraries](#standard-cell-libraries)
+   - [Process Design Kit (PDK)](#process-design-kit-pdk)
+   - [Routing Layers in SKY130 PDK](#routing-layers-in-sky130-pdk)
+5. [Resources](#resources)
+
+---
+
+## Introduction
+
+This documentation provides a detailed overview of the RTL to GDSII flow for ASIC design, based on the SKY130 process technology. The RTL2GDS flow is a crucial part of digital integrated circuit (IC) design, transforming high-level design models into ready-to-fabricate layouts.
+
+## Overview of the RTL to GDSII Flow
+
+The RTL to GDSII flow represents the steps taken to transform a design from a high-level hardware description (RTL) to a physical layout (GDSII) that can be fabricated. This process involves several key stages: Synthesis, Floorplanning, Placement, Clock Tree Synthesis, Routing, and Sign-Off Verification.
+
+## Major Steps in the ASIC Design Flow
+
+### 1. Synthesis
+
+**Objective**: Translate the RTL design into a gate-level netlist using standard cells from a library.
+
+- **Input**: RTL (Register Transfer Level) description of the design.
+- **Output**: Gate-level netlist.
+- **Process**: The RTL is synthesized into a circuit composed of standard cells. These cells are pre-designed and characterized components available in the standard cell library.
+- **Tools**: Yosys, Design Compiler.
+
+### 2. Floorplanning
+
+**Objective**: Define the physical layout of the design by partitioning the die and planning the power distribution network.
+
+- **Chip Floorplanning**:
+  - **Die Partitioning**: The chip area is divided among different components.
+  - **Power Planning**: A robust power distribution network is created using VDD and ground pins connected through rings and metal straps to minimize IR drop and electromigration.
+- **Macro Floorplanning**:
+  - **Macro Dimensioning**: Define the dimensions and pin locations of macros.
+  - **Routing Tracks Definition**: Determine the rows and routing tracks for later placement and routing steps.
+- **Tools**: OpenROAD, Floorplan tools.
+
+### 3. Placement
+
+**Objective**: Place the synthesized standard cells onto the chip layout.
+
+- **Global Placement**:
+  - **Objective**: Find optimal positions for all cells, minimizing interconnect delays.
+  - **Outcome**: Initial cell placement, potentially overlapping or illegal.
+- **Detailed Placement**:
+  - **Objective**: Adjust cell positions from global placement to ensure no overlaps and adherence to design rules.
+  - **Outcome**: Legal cell placement ready for routing.
+- **Tools**: OpenROAD, RePlace.
+
+### 4. Clock Tree Synthesis (CTS)
+
+**Objective**: Create a clock distribution network that delivers the clock signal to all clocked elements (e.g., flip-flops) with minimal skew and latency.
+
+- **Clock Tree Structure**:
+  - **Design**: The clock tree is constructed like a tree with the clock source as the root and the clocked elements as the leaves.
+  - **Optimization**: Ensure that the clock signal reaches all elements at the same time (minimized skew).
+- **Tools**: TritonCTS, Clockwise.
+
+### 5. Routing
+
+**Objective**: Connect the placed cells using metal layers while adhering to design rules.
+
+- **Signal Routing**:
+  - **Global Routing**: Coarse routing to create routing guides.
+  - **Detailed Routing**: Fine-grained routing based on guides to implement actual connections.
+- **Routing Constraints**: Utilize the available metal layers as defined by the PDK, respecting their thickness, pitch, and minimum width.
+- **Tools**: FastRoute, OpenROAD Router.
+
+### 6. Sign-Off and Verification
+
+**Objective**: Ensure that the final layout meets all design and manufacturing requirements.
+
+- **Design Rule Checking (DRC)**:
+  - **Objective**: Verify that the layout adheres to manufacturing design rules.
+- **Layout Versus Schematic (LVS)**:
+  - **Objective**: Ensure that the layout matches the original gate-level netlist.
+- **Static Timing Analysis (STA)**:
+  - **Objective**: Confirm that all timing constraints are met to ensure proper operation at the target clock frequency.
+- **Tools**: Magic, OpenSTA.
+
+## Additional Concepts
+
+### Standard Cell Libraries
+
+Standard cells are pre-designed logic gates with defined electrical characteristics. They are the building blocks of the synthesized netlist.
+
+- **Cell Layout**: Regular, enclosed by a fixed-height rectangle, with a variable but discrete width.
+- **Cell Views**:
+  - **Timing (Liberty)**: Delay and power models.
+  - **Layout (GDSII, LEF)**: Detailed and abstract physical layouts.
+  - **Behavioral (HDL)**: Functional description.
+
+### Process Design Kit (PDK)
+
+The PDK provides the necessary technology files, design rules, and libraries required for IC design and fabrication.
+
+- **Contents**:
+  - **Device Models**: Electrical characteristics of the devices.
+  - **Design Rules**: Guidelines for manufacturing.
+  - **Standard Cell Libraries**: Pre-characterized logic gates.
+- **SKY130 PDK**: An open-source PDK developed by SkyWater and Google for the 130nm process node.
+
+### Routing Layers in SKY130 PDK
+
+The SKY130 PDK defines six routing layers:
+
+1. **Local Interconnect**: Titanium nitride layer.
+2. **Metal1 to Metal5**: Aluminum layers for routing, each with specific characteristics.
+
+- **Grid Routing**: Utilizes the defined metal layers and routing grids to create connections between cells.
+- **Tools**: Detailed routers in the OpenROAD flow.
+
