@@ -523,7 +523,7 @@ In OpenLANE, synthesis is initiated through the interactive mode or through spec
 
     To calculate the Flop Ratio, use the following formula:
 
-    \[ \text{Flop Ratio} = \frac{\text{Number of D Flip-Flops}}{\text{Total Number of Cells}} \]
+    $$ \text{Flop Ratio} = \frac{\text{Number of D Flip-Flops}}{\text{Total Number of Cells}} $$
 
     **Example Calculation**
 
@@ -539,13 +539,13 @@ In OpenLANE, synthesis is initiated through the interactive mode or through spec
 
     3. **Perform the Calculation:**
     - Substitute the values into the formula:
-        \[
+        $$
         \text{Flop Ratio} = \frac{1634}{17323} \approx 0.094
-        \]
+        $$
     - Convert to percentage:
-        \[
+        $$
         \text{Flop Ratio (Percentage)} = 0.094 \times 100 \approx 9.4\%
-        \]
+        $$
 
     4. **Interpreting the Result:**
     - A Flop Ratio of 9.4% indicates that 9.4% of the total cell count is comprised of D flip-flops.
