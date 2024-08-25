@@ -621,4 +621,4 @@ docker run hello-world
 ```
 You should see something like this:
 
-<img src="images/Docker_Hello_World.png" alt="Docker_Hello_World" width="20%"/>
+<img src="images/Docker_Hello_World.png" alt="Docker_Hello_World" width="50%"/>
