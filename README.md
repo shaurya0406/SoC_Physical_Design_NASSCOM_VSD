@@ -205,7 +205,10 @@ The Strive family of chipsets is part of an open-source initiative, providing ex
 </details>
 
 ## Lab Details
-
+<details>
+  <summary> 
+Expand or Collapse
+  </summary>
 ### Part 1: Introduction to OpenLANE and the Flow.tcl Script
 
 This section introduces you to the OpenLANE flow, its purpose, and how it automates the RTL-to-GDSII flow. We will also dive into the `flow.tcl` script, which is a key component in running the OpenLANE flow, and discuss the differences between interactive and non-interactive sessions, as well as the initial steps required to set up the environment.
@@ -563,3 +566,4 @@ In OpenLANE, synthesis is initiated through the interactive mode or through spec
 4. **Troubleshooting:**
    - If there are issues or discrepancies in the synthesized netlist or reports, revisit the RTL code and configuration files. Ensure that the design constraints and parameters are correctly specified.
 
+</details>
