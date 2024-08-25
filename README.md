@@ -5,6 +5,14 @@ This course is designed to guide participants through the entire process of SoC 
 # Day 1
 Welcome to the documentation for Day 1 of the "Digital VLSI SoC Design and Planning" course. This document provides a comprehensive overview of the foundational aspects of ASIC design, including the RTL to GDSII flow, OpenLANE, and Strive chipsets.
 
+## Theoretical Concepts
+For Detailed analysis of each lecture of Day 1, refer to [Day1.md](Day1.md)
+### Day1 Overview
+<details>
+  <summary> 
+Expand or Collapse
+  </summary>
+
 ## Table of Contents
 1. [Introduction to ASIC Design](#introduction-to-asic-design)
 2. [Overview of the RTL to GDSII Flow](#overview-of-the-rtl-to-gdsii-flow)
@@ -193,3 +201,84 @@ The Strive family of chipsets is part of an open-source initiative, providing ex
 - **Features**: Same architecture as Strive 2 with additional test structures.
 
 ---
+
+</details>
+
+## Lab Details
+
+### Part 1: Introduction to OpenLANE and the Flow.tcl Script
+
+This section introduces you to the OpenLANE flow, its purpose, and how it automates the RTL-to-GDSII flow. We will also dive into the `flow.tcl` script, which is a key component in running the OpenLANE flow, and discuss the differences between interactive and non-interactive sessions, as well as the initial steps required to set up the environment.
+
+---
+
+#### **1. Overview of OpenLANE**
+
+**OpenLANE** is an open-source flow designed to facilitate the process of converting a Register Transfer Level (RTL) design into a final GDSII layout, which is ready for tape-out. The flow is designed to be automated, modular, and reusable, making it easier for designers to work through the complex stages of physical design.
+
+- **Purpose**: The primary goal of OpenLANE is to provide a completely open-source, end-to-end ASIC design flow that integrates multiple open-source tools. This includes tools for synthesis, placement, routing, and other necessary stages in the RTL-to-GDSII process.
+
+- **Key Tools Used**:
+  - **Yosys**: For logic synthesis.
+  - **ABC**: For technology mapping.
+  - **OpenSTA**: For Static Timing Analysis (STA).
+  - **Magic**: For layout generation and DRC.
+  - **Klayout**: For layout viewing and further checks.
+  - **Netgen**: For LVS (Layout vs. Schematic) checking.
+  - **OpenROAD**: For place and route.
+  - **OpenPhySyn**: For physical synthesis optimizations.
+
+- **Flow Steps**: OpenLANE breaks down the design process into several stages:
+  1. **Preparation**: Setting up the environment and merging libraries.
+  2. **Synthesis**: Converting the RTL code into a gate-level netlist.
+  3. **Floorplanning**: Defining the chip's size, shape, and placement of I/O pins.
+  4. **Placement**: Placing the standard cells in the defined floorplan.
+  5. **Clock Tree Synthesis (CTS)**: Creating a clock distribution network.
+  6. **Routing**: Connecting all the placed cells with wires.
+  7. **Signoff**: Performing final checks, including DRC, LVS, and timing analysis.
+
+---
+
+#### **2. Flow.tcl Script**
+
+The `flow.tcl` script is the backbone of the OpenLANE flow. It is used to run the entire flow in a sequential manner or interactively, depending on the user's requirements.
+
+- **Script Location**: The `flow.tcl` script is located in the root directory of the OpenLANE flow. It is the primary script that orchestrates the entire design flow by calling various tools and scripts in a defined order.
+
+- **Modes of Operation**:
+  - **Interactive Mode**: The user can execute each step of the flow manually, providing more control and the ability to analyze results after each step.
+  - **Non-Interactive Mode**: The entire flow runs automatically from start to finish with minimal user intervention. This mode is useful for running the entire design flow in a batch process.
+
+- **Command Structure**:
+  - In **interactive mode**, the user runs the `flow.tcl` script with the `-interactive` flag:
+    ```bash
+    ./flow.tcl -interactive
+    ```
+  - Once in interactive mode, commands can be issued step by step, such as:
+    ```bash
+    prep design <design_name>
+    run_synthesis
+    ```
+  - In **non-interactive mode**, the flow runs from start to finish using a single command:
+    ```bash
+    ./flow.tcl -design <design_name>
+    ```
+
+- **Key Steps in the Script**:
+  1. **Preparation (`prep`)**: The script sets up the environment and merges the required technology libraries, such as LEF (Library Exchange Format) files.
+  2. **Synthesis (`run_synthesis`)**: Executes the Yosys synthesis tool to generate a gate-level netlist.
+  3. **Floorplanning (`run_floorplan`)**: Runs the floorplanning step, defining the physical dimensions and layout of the chip.
+  4. **Placement (`run_placement`)**: Places the synthesized cells onto the defined floorplan.
+  5. **CTS (`run_cts`)**: Synthesizes the clock tree, ensuring proper clock distribution across the design.
+  6. **Routing (`run_routing`)**: Connects the cells using metal layers to form the complete design.
+  7. **Signoff (`run_signoff`)**: Runs final checks like DRC and LVS before the design is taped out.
+
+- **Flexibility and Customization**:
+  - The `flow.tcl` script allows for significant flexibility, as users can modify and add new commands depending on the design requirements. 
+  - Configuration files can be edited to change the flow's behavior, such as adjusting utilization rates or modifying clock constraints.
+  
+- **Command Logging**:
+  - All commands executed during the flow are logged in a `commands.log` file within the `runs` directory, providing a complete record of the flow for debugging and review.
+
+---
+
