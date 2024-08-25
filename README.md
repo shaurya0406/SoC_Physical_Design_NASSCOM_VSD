@@ -746,3 +746,283 @@ For various arguments to this script, checkout the [Docs](https://openlane.readt
 The terminal prompt should now change to Tcl Console represeted by `%` symbol:
 
 <img src="images/Flow_Tcl_Console.png" alt="Flow_Tcl_Console" width="20%"/>
+
+# Step 3. Setup Target Package
+```bash
+# Specify OpenLane Package Version
+package require openlane 0.9
+```
+# Step 4. Specify the Target Design
+Specify the design folder. A design folder should contain a `config.tcl` or `config.json` file defining the design parameters. If the folder is not found, the `./designs` directory is searched for said file.
+
+In our case, we will be working on `picorv32a` already present in the `~/Openlane/designs` directory.
+```bash
+prep -design picorv32a
+```
+Output:
+
+<img src="images/Prep_Design_Tcl.png" alt="Prep_Design_Tcl" width="20%"/>
+
+## Prep Design Output Explanation
+
+The output of the `prep -design picorv32a` command in OpenLane is providing detailed information about the preparation of the design environment for the physical design flow of the `picorv32a` design. 
+
+Note: this output may vary according to the Github commit version of OpenLane you are using.
+
+### 1. `[INFO]: Using configuration in 'designs/picorv32a/config.tcl'...`
+- **Explanation**: This message indicates that OpenLane is using the configuration file located at `designs/picorv32a/config.tcl`. This file contains specific settings and parameters that guide the design flow for the `picorv32a` design.
+
+### 2. `[INFO]: Process Design Kit: sky130A`
+- **Explanation**: The Process Design Kit (PDK) being used is `sky130A`. A PDK includes technology-specific information like design rules, process parameters, and standard cell libraries. `sky130A` refers to the SkyWater 130nm process technology.
+
+### 3. `[INFO]: PDK Root: /home/parallels/.volare`
+- **Explanation**: The root directory for the PDK is located at `/home/parallels/.volare`. This is where the PDK files and related data are stored. OpenLane accesses these files for process-specific information during the flow.
+
+### 4. `[INFO]: Standard Cell Library: sky130_fd_sc_hd`
+- **Explanation**: The standard cell library being used is `sky130_fd_sc_hd`. This library contains the logic cells (like gates, flip-flops) that are used to build the design. `hd` typically stands for high-density, indicating a library optimized for area.
+
+### 5. `[INFO]: Optimization Standard Cell Library: sky130_fd_sc_hd`
+- **Explanation**: The same `sky130_fd_sc_hd` library is also being used for optimization purposes. Optimization in physical design often involves choosing the best cells to meet timing, power, and area requirements.
+
+### 6. `[INFO]: Run Directory: /openlane/designs/picorv32a/runs/RUN_2024.08.25_18.36.22`
+- **Explanation**: The directory where all the files and results of this specific run will be stored is `/openlane/designs/picorv32a/runs/RUN_2024.08.25_18.46.43`. This directory is automatically created with a timestamp (`2024.08.25_18.46.43`) to differentiate between different runs.
+
+### 7. `[WARNING]: SYNTH_MAX_FANOUT is now deprecated; use MAX_FANOUT_CONSTRAINT instead.`
+- **Explanation**: This warning indicates that the `SYNTH_MAX_FANOUT` parameter is no longer in use. Users are recommended to use the `MAX_FANOUT_CONSTRAINT` parameter instead for controlling the maximum fanout during synthesis.
+
+### 8. `[INFO]: Saving runtime environment...`
+- **Explanation**: OpenLane saves the current runtime environment, including all relevant settings and environment variables. This helps in ensuring reproducibility and debugging if needed.
+
+### 9. `[INFO]: Preparing LEF files for the nom corner...`
+- **Explanation**: LEF (Library Exchange Format) files are being prepared for the "nom" (nominal) corner. The "nom" corner represents typical process, voltage, and temperature conditions. LEF files contain information about the physical layout of the cells.
+
+### 10. `[INFO]: Preparing LEF files for the min corner...`
+- **Explanation**: LEF files are also being prepared for the "min" corner, which represents the slowest or least favorable process, voltage, and temperature conditions. This is important for ensuring the design meets timing and functionality under worst-case scenarios.
+
+### 11. `[INFO]: Preparing LEF files for the max corner...`
+- **Explanation**: Similarly, LEF files are prepared for the "max" corner, representing the fastest or most favorable conditions. This helps in verifying that the design does not violate timing or other constraints under best-case scenarios.
+
+### 12. `[WARNING]: PNR_SDC_FILE is not set. It is recommended to write a custom SDC file for the design. Defaulting to BASE_SDC_FILE`
+- **Explanation**: This warning indicates that the `PNR_SDC_FILE` (which specifies timing constraints for Place and Route) is not set. OpenLane will default to using the `BASE_SDC_FILE`, but it is recommended to create a custom SDC file tailored to the specific design to ensure better timing optimization during the Place and Route phase.
+
+### 14. `[WARNING]: SIGNOFF_SDC_FILE is not set. It is recommended to write a custom SDC file for the design. Defaulting to BASE_SDC_FILE`
+- **Explanation**: Similar to the previous warning, this message indicates that the `SIGNOFF_SDC_FILE` (which is used for final timing sign-off) is not set. Again, OpenLane defaults to the `BASE_SDC_FILE`, but using a custom SDC file is recommended for accurate final timing verification.
+
+---
+
+# RTL2GDS Flow
+
+## 1. Synthesis
+Runs `yosys` synthesis on the current design as well as `OpenSTA` timing analysis on the generated netlist. The logs are produced under `/<run_path>/logs/synthesis/`, the timing reports are under `/<run_path>/reports/synthesis/`, and the synthesized netlist under `/<run_path>/results/synthesis/`.
+```bash
+run_synthesis
+```
+<img src="images/Run_Synthesis_Tcl.png" alt="Run_Synthesis_Tcl" width="20%"/>
+
+Open another Terminal tab/window to analyse the synthesis report.
+
+```bash
+# Replace `<run_path>` with your directory path
+# Example: ~/OpenLane/designs/picorv32a/runs/RUN_2024.08.25_18.46.43
+cd <run_path>/reports/synthesis/
+
+# List all files
+ll
+```
+### Synthesis Report: 
+
+<img src="images/Synthesis_Directory.png" alt="Synthesis_Directory" width="20%"/>
+
+After running the `run_synthesis` command in OpenLane, several report files are generated to provide detailed information about the synthesis process, including area usage, statistics, and specific checks. Here's an explanation of each of these report files:
+
+### 1. `1-synthesis.AREA_0.chk.rpt`
+This file is a check report (`chk.rpt`) related to the area estimation during synthesis. The report typically includes checks and validations performed to ensure that the area usage (in terms of cell count and overall footprint) meets the design requirements or constraints. It may contain warnings or errors if any area-related issues are detected, such as exceeding the area budget.
+
+### 2. `1-synthesis_pre.stat`
+The `1-synthesis_pre.stat` file contains pre-synthesis statistics. This report captures the state of the design before the synthesis process begins, including information about the design's logic, flip-flops, and other elements before they are optimized and mapped to standard cells. This file is useful for comparing the design before and after synthesis to understand the impact of the synthesis process.
+
+### 3. `1-synthesis.AREA_0.stat.rpt`
+This file is a detailed area report generated after synthesis. It includes statistics on the area occupied by the synthesized design, broken down by different categories, such as standard cells, combinational logic, and sequential elements (like flip-flops). The report provides a summary of how much area each part of the design consumes, helping to analyze and optimize area utilization.
+
+### 4. `1-synthesis_pre_synth.chk.rpt`
+The `1-synthesis_pre_synth.chk.rpt` is a check report generated before the actual synthesis begins. It contains checks related to the design's integrity, constraints, and potential issues that could affect synthesis. This report helps in identifying any problems that need to be addressed before running the synthesis, such as constraint violations or design rule checks.
+
+### 5. `1-synthesis_dff.stat`
+This report file, `1-synthesis_dff.stat`, focuses on the statistics of the flip-flops (`DFF` stands for D Flip-Flop) used in the design. It provides information on the number and types of flip-flops present in the synthesized design, including details about their distribution and utilization. This report is particularly important for understanding the design's sequential logic and its impact on overall area and timing.
+
+---
+
+These files collectively provide a comprehensive view of the synthesis process, from pre-synthesis conditions to post-synthesis area utilization and flip-flop statistics. They are essential for analyzing the effectiveness of the synthesis, identifying potential issues, and optimizing the design for better performance, area, and power efficiency.
+
+### Flip Flop Ratio
+- One of the first tasks after synthesis is to calculate the Flop Ratio. 
+- The Flop Ratio is a metric used to evaluate the utilization of flip-flops in your design.
+- It is calculated as the ratio of the number of D flip-flops to the total number of cells in the design.
+- These details can be found in the generated `1-synthesis.AREA_0.stat.rpt` file.
+
+```bash
+# Extract and store the number of cells
+num_cells=$(grep -E 'Number of cells:' 1-synthesis.AREA_0.stat.rpt | awk '{print $NF}')
+
+# Extract and store the number of D Flip-Flops
+num_dff=$(grep 'sky130_fd_sc_hd__dfxtp_' 1-synthesis.AREA_0.stat.rpt | awk '{print $2}')
+
+# Calculate the Flip-Flop Ratio in percentage
+flip_flop_ratio=$(echo "scale=2; $num_dff / $num_cells * 100" | bc)
+
+# Output the results
+echo "Number of Cells: $num_cells"
+echo "Number of D Flip-Flops: $num_dff"
+echo "Flip-Flop Ratio: $flip_flop_ratio%"
+```
+
+#### Explanation of the above termainal commands
+<details>
+    <summary>Expand or Collapse</summary>
+```bash
+# Extract and store the number of cells
+num_cells=$(grep -E 'Number of cells:' 1-synthesis.AREA_0.stat.rpt | awk '{print $NF}')
+```
+
+- **`grep -E 'Number of cells:' 1-synthesis.AREA_0.stat.rpt`**: 
+  - `grep -E` searches the file `1-synthesis.AREA_0.stat.rpt` for the line containing the text `Number of cells:`.
+  - `-E` allows for extended regular expressions, but in this case, it's just matching a simple string.
+  
+- **`awk '{print $NF}'`**: 
+  - `awk` is a text processing tool.
+  - `{print $NF}` tells `awk` to print the last field (`NF` stands for "Number of Fields") of the line matched by `grep`.
+  - This extracts the number of cells from the line.
+  
+- **`num_cells=$(...)`**:
+  - The result of the `grep` and `awk` commands is stored in the variable `num_cells`.
+  - `$(...)` is command substitution, meaning the output of the command inside the parentheses is assigned to `num_cells`.
+
+```bash
+# Extract and store the number of D Flip-Flops
+num_dff=$(grep 'sky130_fd_sc_hd__dfxtp_' 1-synthesis.AREA_0.stat.rpt | awk '{print $2}')
+```
+
+- **`grep 'sky130_fd_sc_hd__dfxtp_' 1-synthesis.AREA_0.stat.rpt`**:
+  - `grep` searches the file `1-synthesis.AREA_0.stat.rpt` for the line containing the specific cell name `sky130_fd_sc_hd__dfxtp_`.
+  - This cell name represents the D Flip-Flops in the design.
+
+- **`awk '{print $2}'`**:
+  - This tells `awk` to print the second field of the matched line.
+  - The second field contains the number of D Flip-Flops.
+
+- **`num_dff=$(...)`**:
+  - The number of D Flip-Flops is stored in the variable `num_dff`.
+
+```bash
+# Calculate the Flip-Flop Ratio in percentage
+flip_flop_ratio=$(echo "scale=2; $num_dff / $num_cells * 100" | bc)
+```
+
+- **`echo "scale=2; $num_dff / $num_cells * 100"`**:
+  - `echo` outputs the string `"scale=2; $num_dff / $num_cells * 100"`.
+  - `scale=2` sets the precision to 2 decimal places for the calculation.
+  - `$num_dff / $num_cells * 100` calculates the ratio of D Flip-Flops to total cells and multiplies by 100 to get a percentage.
+
+- **`| bc`**:
+  - The output of `echo` is piped to `bc`, a command-line calculator that can handle floating-point arithmetic.
+  - `bc` evaluates the expression and returns the result.
+
+- **`flip_flop_ratio=$(...)`**:
+  - The result of the `bc` calculation is stored in the variable `flip_flop_ratio`.
+
+```bash
+# Output the results
+echo "Number of Cells: $num_cells"
+echo "Number of D Flip-Flops: $num_dff"
+echo "Flip-Flop Ratio: $flip_flop_ratio%"
+```
+
+- **`echo "Number of Cells: $num_cells"`**:
+  - Prints the total number of cells.
+
+- **`echo "Number of D Flip-Flops: $num_dff"`**:
+  - Prints the number of D Flip-Flops.
+
+- **`echo "Flip-Flop Ratio: $flip_flop_ratio%"`**:
+  - Prints the Flip-Flop Ratio as a percentage.
+
+These lines provide a detailed output of the synthesis report, showing the number of cells, the number of D Flip-Flops, and the calculated Flip-Flop Ratio.
+</details>
+
+### Flip Flop Ratio Output
+```
+Number of Cells: 16558
+Number of D Flip-Flops: 1613
+Flip-Flop Ratio: 9.00%
+```
+<img src="images/FlipFlop_Ratio.png" alt="FlipFlop_Ratio" width="20%"/>
+
+### Synthesis Results
+After running the synthesis process in OpenLane, two key files are typically generated in the `results/synthesis` folder:
+
+```bash
+# Replace `<run_path>` with your directory path
+# Example: ~/OpenLane/designs/picorv32a/runs/RUN_2024.08.25_18.46.43
+cd <run_path>/results/synthesis/
+
+# List all files
+ll
+```
+
+#### 1. `picorv32a.sdf` (Standard Delay Format File)
+
+**Purpose:**
+- The `picorv32a.sdf` file is a **Standard Delay Format (SDF)** file. It contains timing information extracted from the synthesized design, such as delays for gates, interconnects, and setup/hold times for flip-flops.
+- SDF files are used in timing simulations to ensure that the synthesized design meets timing constraints.
+
+**Key Contents:**
+- **Delays:** Specifies the propagation delay of signals through gates and interconnects. Delays are often specified for different conditions like minimum, typical, and maximum values.
+- **Setup/Hold Times:** Defines the setup and hold times for flip-flops and other sequential elements.
+- **Timing Checks:** Includes timing checks that validate if the circuit operates correctly under specified timing constraints.
+
+**Usage:**
+- This file is used during post-synthesis and post-layout simulations. By back-annotating the delays in the netlist with the information in the SDF file, a more accurate simulation of the circuit's timing behavior can be achieved.
+- Tools like ModelSim, VCS, OpenSTA(in our case) or other simulation tools can use the SDF file to simulate the timing of the synthesized design, ensuring that it will function correctly at the specified clock speed in the final implementation.
+
+#### 2. `picorv32a.v` (Gate-Level Netlist)
+
+**Purpose:**
+- The `picorv32a.v` file is the **gate-level netlist** in Verilog format. It represents the synthesized version of the design, where high-level RTL (Register Transfer Level) code has been mapped to specific logic gates and standard cells provided by the technology library (in this case, the `sky130_fd_sc_hd` standard cells).
+
+**Key Contents:**
+- **Instances of Standard Cells:** The netlist contains instances of logic gates, flip-flops, multiplexers, etc., mapped from the RTL design to the actual cells in the standard cell library.
+- **Wires and Nets:** It shows how the cells are connected via wires or nets.
+- **Ports:** Input, output, and bidirectional ports of the design, as defined in the original RTL, are maintained in the gate-level netlist.
+
+**Usage:**
+- The gate-level netlist is used in post-synthesis simulations and further stages of the design flow, such as place-and-route (PnR).
+- It is a crucial file for verifying that the synthesized design behaves as expected and meets the required specifications before proceeding to physical design steps.
+- This file is also useful for generating final layouts and for preparing for the tape-out of the design.
+
+### Synthesised Netlist
+The ABC has done all the mappings!
+```bash
+less picorv32a.v
+```
+<img src="images/Synthesised_Netlist.png" alt="Synthesised_Netlist" width="20%"/>
+
+To quit the `less` window, press `q`
+
+### OpenSTA Timing Report
+After running the synthesis process in OpenLane, the timing reports are generated in `logs/timimg` folder:
+
+```bash
+# Replace `<run_path>` with your directory path
+# Example: ~/OpenLane/designs/picorv32a/runs/RUN_2024.08.25_18.46.43
+cd <run_path>/logs/synthesis/
+
+# List all files
+ls
+
+# View `2-sta.log` file as mentioned in the output of `run_synthesis` command
+less 2-sta.log
+```
+To quit the `less` window, press `q`
+
+<img src="images/STA_Report.png" alt="STA_Report" width="20%"/>
+
