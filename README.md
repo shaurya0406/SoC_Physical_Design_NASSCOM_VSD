@@ -619,6 +619,130 @@ sudo reboot
 # After reboot, run the test Docker container again to verify that the current user can run Docker commands without sudo
 docker run hello-world
 ```
-You should see something like this:
+A successful installation of Docker would have this output:
+```plaintext
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
 
-<img src="images/Docker_Hello_World.png" alt="Docker_Hello_World" width="50%"/>
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (arm64v8)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+ https://hub.docker.com/
+
+For more examples and ideas, visit:
+ https://docs.docker.com/get-started/
+```
+
+<img src="images/Docker_Hello_World.png" alt="Docker_Hello_World" width="20%"/>
+
+### Checking Installation Requirements
+In order to check the installation, you can use the following commands:
+```bash
+git --version
+docker --version
+python3 --version
+python3 -m pip --version
+make --version
+python3 -m venv -h
+```
+Successful output will look like this:
+
+```plaintext
+git version 2.34.1
+Docker version 27.1.2, build d01f264
+Python 3.10.12
+pip 22.0.2 from /usr/lib/python3/dist-packages/pip (python 3.10)
+GNU Make 4.3
+Built for aarch64-unknown-linux-gnu
+Copyright (C) 1988-2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+usage: venv [-h] [--system-site-packages] [--symlinks | --copies] [--clear] [--upgrade] [--without-pip] [--prompt PROMPT] [--upgrade-deps] ENV_DIR [ENV_DIR ...]
+
+Creates virtual Python environments in one or more target directories.
+
+positional arguments:
+  ENV_DIR               A directory to create the environment in.
+
+options:
+  -h, --help            show this help message and exit
+  --system-site-packages
+                        Give the virtual environment access to the system site-packages dir.
+  --symlinks            Try to use symlinks rather than copies, when symlinks are not the default for the platform.
+  --copies              Try to use copies rather than symlinks, even when symlinks are the default for the platform.
+  --clear               Delete the contents of the environment directory if it already exists, before environment creation.
+  --upgrade             Upgrade the environment directory to use this version of Python, assuming Python has been upgraded in-place.
+  --without-pip         Skips installing or upgrading pip in the virtual environment (pip is bootstrapped by default)
+  --prompt PROMPT       Provides an alternative prompt prefix for this environment.
+  --upgrade-deps        Upgrade core dependencies: pip setuptools to the latest version in PyPI
+
+Once an environment has been created, you may wish to activate it, e.g. by sourcing an activate script in its bin directory.
+```
+<img src="images/Check_Requirements.png" alt="Check_Requirements" width="20%"/>
+
+## Download and Install OpenLane
+Download OpenLane from GitHub:
+
+These steps will download and build OpenLane and sky130 PDK. Finally, it will run a ~5 minute test of `spm` design that verifies that the flow and the PDK were properly installed. If you are planning to use another PDK, then you need to follow the PDK installation guide for that specific PDK.
+```bash
+git clone --depth 1 https://github.com/The-OpenROAD-Project/OpenLane.git
+cd OpenLane/
+make
+make test
+```
+Successful test will output the following line:
+```
+Basic test passed
+```
+<img src="images/Make_Test.png" alt="Make_Test" width="20%"/>
+
+## Viewing Test Design Outputs
+Open the final layout using KLayout. This will open the window of KLayout in editing mode -e with sky130 technology.
+```bash
+# Enter a Docker session:
+make mount
+
+# Open the spm.gds using KLayout with sky130 PDK
+klayout -e -nn $PDK_ROOT/sky130A/libs.tech/klayout/tech/sky130A.lyt \
+   -l $PDK_ROOT/sky130A/libs.tech/klayout/tech/sky130A.lyp \
+   ./designs/spm/runs/openlane_test/results/final/gds/spm.gds
+```
+<img src="images/Test_GDS.png" alt="Test_GDS" width="100%"/>
+
+## Leave the Docker
+```bash
+exit
+```
+
+## Step 1. Starting the OpenLane Environment
+OpenLane uses Docker to create a reproducible environment for your projects. You don’t need any extra steps to run the Docker image, as the Makefile already takes care of it. Just run the following commands to enter the OpenLane environment:
+```bash
+cd ~/OpenLane/
+make mount
+```
+Your terminal environment should now switch to the OpenLane Container:
+
+<img src="images/OpenLane_Container.png" alt="OpenLane_Container" width="20%"/>
+
+## Step 2. Running the flow
+The entry point for OpenLane is the `./flow.tcl` script.
+
+For various arguments to this script, checkout the [Docs](https://openlane.readthedocs.io/en/latest/reference/openlane_commands.html#general-commands)
+```bash
+# Run in Interactive mode
+./flow.tcl -interactive
+```
+The terminal prompt should now change to Tcl Console represeted by `%` symbol:
+
+<img src="images/Flow_Tcl_Console.png" alt="Flow_Tcl_Console" width="20%"/>
