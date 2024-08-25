@@ -567,3 +567,58 @@ In OpenLANE, synthesis is initiated through the interactive mode or through spec
    - If there are issues or discrepancies in the synthesized netlist or reports, revisit the RTL code and configuration files. Ensure that the design constraints and parameters are correctly specified.
 
 </details>
+
+## My Setup on Mac M2 Pro
+- I have installed a `Ubuntu 22.04.02` Virtual Machine using [Parallels Desktop](https://www.parallels.com) (Will try to setup OpenLane directly on Mac later)
+- Cloned OpenLane Github Repo and installed necessary requirements.
+
+### Installation of required packages
+Update packages database and upgrade the packages to avoid version mismatches then install required packages.
+```bash
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt install -y build-essential python3 python3-venv make git
+```
+### Docker Installation
+Docker is required to run OpenLane because it ensures a consistent, isolated, and reproducible environment, simplifies the setup process, provides portability across different operating systems, allows easy version control, enhances security, and facilitates collaboration. By using Docker, developers can focus on the design process without worrying about the complexities of setting up and managing the underlying toolchain and dependencies
+```bash
+# Remove old installations
+sudo apt-get remove docker docker-engine docker.io containerd runc
+
+# Create the directory /etc/apt/keyrings with specific permissions (755: owner can read/write/execute; group/others can read/execute)
+sudo install -m 0755 -d /etc/apt/keyrings
+
+# Download the Docker GPG key and save it to /etc/apt/keyrings/docker.asc. This key is used to verify the integrity of Docker packages.
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+
+# Ensure the Docker GPG key file has read permissions for all users
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the Docker repository to the system's APT sources list, specifying the architecture and signing key
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+$(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Update the package list to include the Docker packages from the newly added repository
+sudo apt-get update
+
+# Install Docker Engine, CLI, container runtime, and necessary plugins (Buildx and Compose)
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# Run a test Docker container to verify that Docker is installed and functioning correctly
+sudo docker run hello-world
+
+# Create the 'docker' group, which allows users in this group to run Docker commands without sudo
+sudo groupadd docker
+
+# Add the current user to the 'docker' group to enable running Docker commands without sudo
+sudo usermod -aG docker $USER
+
+# Reboot the system to apply group changes
+sudo reboot
+
+# After reboot, run the test Docker container again to verify that the current user can run Docker commands without sudo
+docker run hello-world
+```
+You should see something like this:
+
+<img src="images/Docker_Hello_World.png" alt="Docker_Hello_World" width="20%"/>
