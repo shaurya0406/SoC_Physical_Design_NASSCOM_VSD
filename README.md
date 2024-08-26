@@ -868,7 +868,7 @@ num_cells=$(grep -E 'Number of cells:' 1-synthesis.AREA_0.stat.rpt | awk '{print
 num_dff=$(grep 'sky130_fd_sc_hd__dfxtp_' 1-synthesis.AREA_0.stat.rpt | awk '{print $2}')
 
 # Calculate the Flip-Flop Ratio in percentage
-flip_flop_ratio=$(echo "scale=2; $num_dff / $num_cells * 100" | bc)
+flip_flop_ratio=$(echo "scale=4; $num_dff / $num_cells * 100" | bc)
 
 # Output the results
 echo "Number of Cells: $num_cells"
@@ -953,7 +953,7 @@ These lines provide a detailed output of the synthesis report, showing the numbe
 ```
 Number of Cells: 16558
 Number of D Flip-Flops: 1613
-Flip-Flop Ratio: 9.00%
+Flip-Flop Ratio: 9.7400%
 ```
 <img src="images/FlipFlop_Ratio.png" alt="FlipFlop_Ratio" width="20%"/>
 
