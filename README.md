@@ -747,12 +747,12 @@ The terminal prompt should now change to Tcl Console represeted by `%` symbol:
 
 <img src="images/Flow_Tcl_Console.png" alt="Flow_Tcl_Console" width="20%"/>
 
-# Step 3. Setup Target Package
+## Step 3. Setup Target Package
 ```bash
 # Specify OpenLane Package Version
 package require openlane 0.9
 ```
-# Step 4. Specify the Target Design
+## Step 4. Specify the Target Design
 Specify the design folder. A design folder should contain a `config.tcl` or `config.json` file defining the design parameters. If the folder is not found, the `./designs` directory is searched for said file.
 
 In our case, we will be working on `picorv32a` already present in the `~/Openlane/designs` directory.
@@ -1026,10 +1026,57 @@ To quit the `less` window, press `q`
 
 <img src="images/STA_Report.png" alt="STA_Report" width="20%"/>
 
-# Day2
+---
 
-## Theoretical Concepts
+## 2. Floor Plan
 
-### Define Width & Height of Core & Die
-![Day2](images/Day2/D2_SK1_L1.gif)
+Next step is to run the floorplan using this command in the `flow.tcl interactive terminal`.
+The resulting files are under `/<run_path>/tmp/floorplan/` and `/<run_path>/results/floorplan/`
+
+```bash
+run_floorplan
+```
+<img src="images/Day2/D2_Lab/Run_Floorplan.png" alt="Run_Floorplan" width="20%"/>
+
+### Calculate the Die area
+
+Navigate to the Floorplan `.def` file in the `tmp/floorplan` folder and use the `less` command to view it in **another terminal tab**
+
+```bash
+# Replace `<run_path>` with your directory path
+# Example: ~/OpenLane/designs/picorv32a/runs/RUN_2024.08.25_18.46.43
+cd <run_path>/tmp/floorplan/
+
+# List all files
+ls
+
+# View `2-sta.log` file as mentioned in the output of `run_synthesis` command
+less 3-initial_fp.def
+```
+To quit the `less` window, press `q`
+
+<img src="images/Day2/D2_Lab/Floorplan_DEF_Die_Area.png" alt="Floorplan_DEF_Die_Area" width="20%"/>
+
+According to floorplan def
+```math
+1000\ Unit\ Distance = 1\ Micron
+```
+```math
+Die\ width\ in\ unit\ distance = 692760 - 0 = 692760
+```
+```math
+Die\ height\ in\ unit\ distance = 703480 - 0 = 703480
+```
+```math
+Distance\ in\ microns = \frac{Value\ in\ Unit\ Distance}{1000}
+```
+```math
+Die\ width\ in\ microns = \frac{692760}{1000} = 692.760\ Microns
+```
+```math
+Die\ height\ in\ microns = \frac{703480}{1000} = 703.480\ Microns
+```
+```math
+Area\ of\ die\ in\ microns = 692.760 * 703.480 = 487,342.8048\ Square\ Microns
+```
 
