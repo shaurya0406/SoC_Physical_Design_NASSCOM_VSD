@@ -835,20 +835,20 @@ ll
 
 After running the `run_synthesis` command in OpenLane, several report files are generated to provide detailed information about the synthesis process, including area usage, statistics, and specific checks. Here's an explanation of each of these report files:
 
-### 1. `1-synthesis.AREA_0.chk.rpt`
+#### 1. `1-synthesis.AREA_0.chk.rpt`
 This file is a check report (`chk.rpt`) related to the area estimation during synthesis. The report typically includes checks and validations performed to ensure that the area usage (in terms of cell count and overall footprint) meets the design requirements or constraints. It may contain warnings or errors if any area-related issues are detected, such as exceeding the area budget.
 
-### 2. `1-synthesis_pre.stat`
-The `1-synthesis_pre.stat` file contains pre-synthesis statistics. This report captures the state of the design before the synthesis process begins, including information about the design's logic, flip-flops, and other elements before they are optimized and mapped to standard cells. This file is useful for comparing the design before and after synthesis to understand the impact of the synthesis process.
+#### 2. `1-synthesis_pre.stat`
+This file contains pre-synthesis statistics. This report captures the state of the design before the synthesis process begins, including information about the design's logic, flip-flops, and other elements before they are optimized and mapped to standard cells. This file is useful for comparing the design before and after synthesis to understand the impact of the synthesis process.
 
-### 3. `1-synthesis.AREA_0.stat.rpt`
+#### 3. `1-synthesis.AREA_0.stat.rpt`
 This file is a detailed area report generated after synthesis. It includes statistics on the area occupied by the synthesized design, broken down by different categories, such as standard cells, combinational logic, and sequential elements (like flip-flops). The report provides a summary of how much area each part of the design consumes, helping to analyze and optimize area utilization.
 
-### 4. `1-synthesis_pre_synth.chk.rpt`
-The `1-synthesis_pre_synth.chk.rpt` is a check report generated before the actual synthesis begins. It contains checks related to the design's integrity, constraints, and potential issues that could affect synthesis. This report helps in identifying any problems that need to be addressed before running the synthesis, such as constraint violations or design rule checks.
+#### 4. `1-synthesis_pre_synth.chk.rpt`
+This is a check report generated before the actual synthesis begins. It contains checks related to the design's integrity, constraints, and potential issues that could affect synthesis. This report helps in identifying any problems that need to be addressed before running the synthesis, such as constraint violations or design rule checks.
 
-### 5. `1-synthesis_dff.stat`
-This report file, `1-synthesis_dff.stat`, focuses on the statistics of the flip-flops (`DFF` stands for D Flip-Flop) used in the design. It provides information on the number and types of flip-flops present in the synthesized design, including details about their distribution and utilization. This report is particularly important for understanding the design's sequential logic and its impact on overall area and timing.
+#### 5. `1-synthesis_dff.stat`
+This report file focuses on the statistics of the flip-flops (`DFF` stands for D Flip-Flop) used in the design. It provides information on the number and types of flip-flops present in the synthesized design, including details about their distribution and utilization. This report is particularly important for understanding the design's sequential logic and its impact on overall area and timing.
 
 ---
 
@@ -1025,4 +1025,11 @@ less 2-sta.log
 To quit the `less` window, press `q`
 
 <img src="images/STA_Report.png" alt="STA_Report" width="20%"/>
+
+# Day2
+
+## Theoretical Concepts
+
+### Define Width & Height of Core & Die
+![Day2](images/Day2/D2_SK1_L1.gif)
 
