@@ -1497,7 +1497,7 @@ In the context of the Sky130A process technology, "tracks" refer to the predefin
 ```bash
 less <PDK_ROOT>/libs.tech/openlane/sky130_fd_sc_hd/tracks.info
 ```
-<img src="images/Day3/D3_Lab/SKY130A_Tracks_Info.png" alt="SKY130A_Tracks_Info" width="100%"/>
+<img src="images/Day4/D4_Lab/SKY130A_Tracks_Info.png" alt="SKY130A_Tracks_Info" width="100%"/>
 
 
 The `tracks.info` file in the Sky130A Process Design Kit (PDK) provides information about the track spacing and alignment for different metal layers and the local interconnect (LI1) layer. This information is used in the physical design process to guide the placement of standard cells and the routing of wires.
@@ -1531,3 +1531,131 @@ The `tracks.info` file in the Sky130A Process Design Kit (PDK) provides informat
 - **Layer Specificity:** Each layer has its own track configuration, optimized for its specific purpose within the chip's routing hierarchy.
 
 This `tracks.info` file is vital for the place-and-route tools to understand the layout grid, ensuring that wires and vias are placed correctly and that the final design adheres to the manufacturing rules of the Sky130A process.
+
+#### Converge/Allign Magic Grid with SKY130A Tracks Info
+Set the grid in the **Magic Tkcon Window**
+```tcl
+# Display the help information for the 'grid' command in Magic.
+# This provides details on how to use the grid command to set up the grid spacing.
+help grid
+
+# Set the grid spacing in the Magic layout editor:
+#  - First value (0.46um): Horizontal grid spacing (X-direction) for routing.
+#  - Second value (0.34um): Vertical grid spacing (Y-direction) for routing.
+#  - Third value (0.23um): Horizontal grid origin offset (X-direction).
+#  - Fourth value (0.17um): Vertical grid origin offset (Y-direction).
+# These settings align the grid with the specified track spacing for the current process technology.
+grid 0.46um 0.34um 0.23um 0.17um
+```
+<img src="images/Day4/D4_Lab/Custom_Inv_Magic_Grid_Converge.png" alt="Custom_Inv_Magic_Grid_Converge" width="100%"/>
+
+Press `q` in the terminal to exit `less` window
+
+#### Condition 1 Verified
+
+<img src="images/Day4/D4_Lab/Custom_Inv_Magic_Grid_Intersection_Ports.png" alt="Custom_Inv_Magic_Grid_Intersection_Ports" width="100%"/>
+
+### Condition 2
+Width of the standard cell should be odd multiples of the horizontal track pitch.
+
+- The inner white boundary defines the PnR Boundary for the standard cell 
+- Draw a box 
+- and type `box` in the tkcon window
+- it expands to 3 (odd) grid boxes.
+
+```math
+Horizontal\ track\ pitch = 0.46\ um
+```
+
+```math
+Width\ of\ standard\ cell = 1.38\ um = 0.46 * 3
+```
+
+<img src="images/Day4/D4_Lab/Custom_Inv_Magic_Width.png" alt="Custom_Inv_Magic_Width" width="100%"/>
+
+### Condition 3
+Height of the standard cell should be even multiples of the horizontal track pitch.
+
+The inner white boundary defines the PnR Boundary for the standard cell and it expands to 8 (even) grid boxes.
+
+```math
+Vertical\ track\ pitch = 0.34\ um
+```
+```math
+Height\ of\ standard\ cell = 2.72\ um = 0.34 * 8
+```
+
+<img src="images/Day4/D4_Lab/Custom_Inv_Magic_Height.png" alt="Custom_Inv_Magic_Height" width="100%"/>
+
+## 10. Rename Magic File
+Save the finalized layout with custom name and open it.
+
+Command for tkcon window to save the layout with custom name
+```tcl
+# Command to save as
+save sky130_vsdinv.mag
+```
+
+Command for the terminal to open the newly saved layout
+
+```bash
+# Verify genration of the new `sky130_vsdinv.mag` file
+ls
+
+# Command to open custom inverter cell layout in magic
+magic -T <tech_file> sky130_vsdinv.mag &
+```
+
+<img src="images/Day4/D4_Lab/VSD_Inv_Magic.png" alt="VSD_Inv_Magic" width="100%"/>
+
+## 11. Generate LEF File for Custom Std Cell using Magic
+Command for tkcon window to generate the lef file with the same base file name for the custom inverter cell.
+
+```tcl
+lef write
+```
+<img src="images/Day4/D4_Lab/VSD_Inv_LEF_Generation.png" alt="VSD_Inv_LEF_Generation" width="100%"/>
+
+View LEF File in terminal
+```bash
+less sky130_vsdinv.lef
+```
+<img src="images/Day4/D4_Lab/VSD_Inv_LEF_View.png" alt="VSD_Inv_LEF_View" width="20%"/>
+
+**Press `q` to exit less window**
+
+## 12. Add Custom Cell to Your Design folder
+1. Copy the newly generated lef and associated required lib files to 'picorv32a' design 'src' directory.
+
+```bash
+# Copy lef file
+cp sky130_vsdinv.lef ~/OpenLane/designs/picorv32a/src/
+
+# List and check whether it's copied
+ll ~/OpenLane/designs/picorv32a/src
+
+# Copy lib files
+cp libs/sky130_fd_sc_hd__* ~/OpenLane/designs/picorv32a/src/
+
+# List and check whether it's copied
+ll ~/OpenLane/designs/picorv32a/src
+```
+
+  <img src="images/Day4/D4_Lab/VSD_Inv_LEF_LIB.png" alt="VSD_Inv_LEF_LIB" width="20%"/>
+
+2. Edit `picorv32a/config.tcl` to change lib file and add the new extra lef into the openlane flow.
+
+Add these lines:
+```tcl
+set ::env(LIB_SYNTH) "$::env(OPENLANE_ROOT)/designs/picorv32a/src/sky130_fd_sc_hd__typical.lib"
+set ::env(LIB_FASTEST) "$::env(OPENLANE_ROOT)/designs/picorv32a/src/sky130_fd_sc_hd__fast.lib"
+set ::env(LIB_SLOWEST) "$::env(OPENLANE_ROOT)/designs/picorv32a/src/sky130_fd_sc_hd__slow.lib"
+set ::env(LIB_TYPICAL) "$::env(OPENLANE_ROOT)/designs/picorv32a/src/sky130_fd_sc_hd__typical.lib"
+
+set ::env(EXTRA_LEFS) [glob $::env(OPENLANE_ROOT)/designs/$::env(DESIGN_NAME)/src/*.lef]
+```
+
+  <img src="images/Day4/D4_Lab/VSD_Inv_Config_Tcl.png" alt="VSD_Inv_Config_Tcl" width="20%"/>
+
+
+
