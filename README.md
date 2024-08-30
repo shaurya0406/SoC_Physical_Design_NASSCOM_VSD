@@ -1444,3 +1444,90 @@ Fall\ Cell\ Delay = Time\ taken\ for\ output\ to\ fall\ to\ 50\% - Time\ taken\ 
 Fall\ Cell\ Delay = 4.07504 - 4.04992 = 0.02512\ ns = 25.12\ ps
 ```
 ---
+
+## 9. Check DRC Violation of Custom Std cell
+Lets move back to the magic window.
+
+Conditions to be verified before moving forward with custom designed cell layout:
+* **Condition 1**: The input and output ports of the standard cell should lie on the intersection of the vertical and horizontal tracks.
+* **Condition 2**: Width of the standard cell should be odd multiples of the horizontal track pitch.
+* **Condition 3**: Height of the standard cell should be even multiples of the vertical track pitch.
+
+### Condition 1
+The input and output ports of the standard cell should lie on the intersection of the vertical and horizontal tracks.
+
+#### What are Tracks?
+<details>
+  <summary>
+  Expand or Collapse
+  </summary>
+In the context of the Sky130A process technology, "tracks" refer to the predefined grid lines on which standard cells, routing wires, and vias are aligned during the physical design of an integrated circuit (IC). Tracks are crucial in defining the placement and routing resources available for designing circuits. 
+
+##### **Understanding Tracks in Sky130A:**
+
+1. **Track Grid:**
+   - The track grid is a virtual grid overlaid on each metal layer of the chip. The grid spacing is defined by the technology and is typically aligned with the pitches of the metal layers.
+   - Tracks are used to ensure that routing is consistent and follows the design rules specific to the process technology (Sky130A in this case).
+
+2. **Horizontal and Vertical Tracks:**
+   - **Horizontal Tracks:** Typically align with horizontal routing on specific metal layers.
+   - **Vertical Tracks:** Typically align with vertical routing on specific metal layers.
+   - The orientation and spacing of these tracks are designed to optimize routing density and manufacturability.
+
+3. **Usage in Standard Cell Placement:**
+   - Standard cells are placed such that their pins align with these tracks, which simplifies routing and ensures that the design adheres to the technology’s design rules.
+   - The height of standard cells is usually an integer multiple of the vertical track pitch, ensuring they align perfectly with the grid.
+
+4. **Routing Tracks:**
+   - Routing tools use the track information to route signal nets between different components on the chip. By adhering to the tracks, routing tools can avoid violations of design rules and optimize the layout for performance and manufacturability.
+
+5. **Technology File (LEF/DEF):**
+   - In the Sky130A process, the tracks are defined in the technology files, such as LEF (Library Exchange Format) files. These files include information about the metal layers, track pitch, and other physical constraints.
+
+6. **Example in Sky130A:**
+   - For example, in the Sky130A process, the minimum metal pitch might be 0.23 µm, and the track pitch would be derived from this, defining where wires and vias can be placed. The tracks ensure that the routing is efficient and meets the process rules.
+
+##### **Importance of Tracks:**
+- **Design Rule Compliance:** Tracks help in ensuring that the layout adheres to the design rules set by the Sky130A process technology, such as spacing between wires and alignment with the grid.
+- **Optimization:** Proper use of tracks allows for efficient use of the chip area, reducing the overall size of the chip and optimizing performance.
+- **Manufacturability:** Aligning cells and routing to tracks ensures that the design can be manufactured reliably.
+</details>
+
+#### Find out the track width of Sky130A Process Technology
+```bash
+less /home/parallels/.volare/sky130A/libs.tech/openlane/sky130_fd_sc_hd/tracks.info
+```
+<img src="images/Day3/D3_Lab/SKY130A_Tracks_Info.png" alt="SKY130A_Tracks_Info" width="100%"/>
+
+
+The `tracks.info` file in the Sky130A Process Design Kit (PDK) provides information about the track spacing and alignment for different metal layers and the local interconnect (LI1) layer. This information is used in the physical design process to guide the placement of standard cells and the routing of wires.
+
+**General Format:**
+- Each line follows the format:
+  ```
+  <layer> <orientation> <offset> <pitch>
+  ```
+  where:
+  - `<layer>`: The name of the layer (e.g., `li1`, `met1`, etc.).
+  - `<orientation>`: The orientation of the tracks (`X` for horizontal, `Y` for vertical).
+  - `<offset>`: The starting position of the first track from the origin (0,0) in micrometers (µm).
+  - `<pitch>`: The distance between consecutive tracks in micrometers (µm).
+
+1. **`li1 X 0.23 0.46`**
+   - **Layer:** `li1` (Local Interconnect 1)
+   - **Orientation:** `X` (Horizontal tracks)
+   - **Offset:** `0.23 µm` (The first track is offset by 0.23 µm from the origin)
+   - **Pitch:** `0.46 µm` (The horizontal tracks are spaced 0.46 µm apart)
+
+2. **`met1 Y 0.17 0.34`**
+   - **Layer:** `met1` (Metal 1)
+   - **Orientation:** `Y` (Vertical tracks)
+   - **Offset:** `0.17 µm`
+   - **Pitch:** `0.34 µm` (The vertical tracks are spaced 0.34 µm apart)
+
+**Key Points:**
+- **Track Alignment:** The `offset` value determines where the first track begins on the grid. Ensuring cells and wires align with this grid is crucial for routing efficiency and design rule compliance.
+- **Track Pitch:** The `pitch` is critical as it defines the spacing between tracks. Larger pitches allow for thicker wires or reduced resistance but reduce routing density. Smaller pitches increase routing density but may introduce challenges like increased capacitance and crosstalk.
+- **Layer Specificity:** Each layer has its own track configuration, optimized for its specific purpose within the chip's routing hierarchy.
+
+This `tracks.info` file is vital for the place-and-route tools to understand the layout grid, ensuring that wires and vias are placed correctly and that the final design adheres to the manufacturing rules of the Sky130A process.
