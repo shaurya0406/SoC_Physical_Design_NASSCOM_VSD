@@ -1495,7 +1495,7 @@ In the context of the Sky130A process technology, "tracks" refer to the predefin
 
 #### Find out the track width of Sky130A Process Technology
 ```bash
-less /home/parallels/.volare/sky130A/libs.tech/openlane/sky130_fd_sc_hd/tracks.info
+less <PDK_ROOT>/libs.tech/openlane/sky130_fd_sc_hd/tracks.info
 ```
 <img src="images/Day3/D3_Lab/SKY130A_Tracks_Info.png" alt="SKY130A_Tracks_Info" width="100%"/>
 
