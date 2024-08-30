@@ -1279,4 +1279,168 @@ cd vsdstdcelldesign/
 ll
 ```
 
-<img src="images/Day2/D2_Lab/Placement_Standard_Cells.png" alt="Placement_Standard_Cells" width="100%"/>
+<img src="images/Day3/D3_Lab/Clone_VSD_Inv_Git.png" alt="Clone_VSD_Inv_Git" width="20%"/>
+
+## 2. Load Std Cell in Magic
+```bash
+# Command to open custom inverter layout in magic
+magic -T <tech_file> sky130_inv.mag &
+```
+
+<img src="images/Day3/D3_Lab/Custom_Inv_Magic.png" alt="Custom_Inv_Magic" width="100%"/>
+
+## 3. Explore & Verify Std Cell
+1. Identify NMOS
+  <img src="images/Day3/D3_Lab/Custom_Inv_NMOS.png" alt="Custom_Inv_NMOS" width="100%"/>
+2. Identify PMOS
+  <img src="images/Day3/D3_Lab/Custom_Inv_PMOS.png" alt="Custom_Inv_PMOS" width="100%"/>
+3. Verify Output Port "Y" Connectivity to PMOS & NMOS Drain
+  <img src="images/Day3/D3_Lab/Custom_Inv_Y_Connection.png" alt="Custom_Inv_Y_Connection" width="100%"/>
+4. Verify PMOS Source connectivity to VPWR
+  <img src="images/Day3/D3_Lab/Custom_Inv_VPWR_Connection.png" alt="Custom_Inv_VPWR_Connection" width="100%"/>
+5. Verify NMOS Source connectivity to VGND
+  <img src="images/Day3/D3_Lab/Custom_Inv_VGND_Connection.png" alt="Custom_Inv_VGND_Connection" width="100%"/>
+6. Verify Grid Unit 
+- Toggle Grid using the single hotkey `g` and then zoom in (using `z`) to view the grid boxes.
+- Selct the Grid box and get the dimensions by typing `box` in the tkcon window.
+  <img src="images/Day3/D3_Lab/Custom_Inv_Grid_Unit.png" alt="Custom_Inv_Grid_Unit" width="100%"/>
+- Grid Unit is `0.010 Microns`
+
+## 4. SPICE Extraction of Custom Std Cell Design
+Run the following commands in the Magic tkcon window
+```bash
+# Check current directory
+pwd
+
+# Extraction command to extract to .ext format
+extract all
+
+# Before converting ext to spice this command enable the parasitic extraction also
+ext2spice cthresh 0 rthresh 0
+
+# Converting to ext to spice
+ext2spice
+```
+<img src="images/Day3/D3_Lab/Custom_Inv_SPICE_Extraction.png" alt="Custom_Inv_SPICE_Extraction" width="100%"/>
+
+## 5. View extracted SPICE Simulation File
+### Extracted SPICE File
+<img src="images/Day3/D3_Lab/Custom_Inv_SPICE_Extracted.png" alt="Custom_Inv_SPICE_Extracted" width="100%"/>
+
+### Edit the SPICE File
+1. Edit the scale to grid unit
+2. Include custom inverter libraries for our std cell
+3. Change the PMOS & NMOS to the included library names and sub-circuit names
+4. Add VDD & VSS for Simulation
+5. Define the Input Pulse parameters
+6. Increase Load capacitance to reduce output spikes
+7. Add the Transient Analysis settings
+
+<img src="images/Day3/D3_Lab/Custom_Inv_SPICE_Edited.png" alt="Custom_Inv_SPICE_Edited" width="100%"/>
+
+## 6. Install NGSpice Tool for simulation
+```bash
+# Install the NGSpice circuit simulator using the system's package manager (apt)
+sudo apt install ngspice
+
+# Check the installation path of the 'ngspice' executable
+which ngspice
+```
+<img src="images/Day3/D3_Lab/NGSpice_Installation.png" alt="NGSpice_Installation" width="100%"/>
+
+## 7. Run SPICE Simulation using NGSpice
+### Run NGSpice tool
+```bash
+ngspice sky130_inv.spice
+```
+<img src="images/Day3/D3_Lab/Custom_Inv_SPICE_Run.png" alt="Custom_Inv_SPICE_Run" width="100%"/>
+
+### Plot Input and Output Waveform vs Time
+The terminal prompt will change for NGSpice tool. Represented like this: `ngspice 1 -> `
+
+```bash
+plot y vs time a
+```
+A new window will open.
+<img src="images/Day3/D3_Lab/Custom_Inv_SPICE_Sim.png" alt="Custom_Inv_SPICE_Sim" width="100%"/>
+<img src="images/Day3/D3_Lab/Custom_Inv_SPICE_Graph.png" alt="Custom_Inv_SPICE_Graph" width="100%"/>
+
+## 8. SPICE Simulation Analysis
+We need to calcluate the following:
+1. Rise transition time calculation
+2. Fall transition time calculation
+3. Rise Cell Delay Calculation
+4. Fall Cell Delay Calculation
+
+### Rise transition time calculation
+```math
+Rise\ transition\ time = Time\ taken\ for\ output\ to\ rise\ to\ 80\% - Time\ taken\ for\ output\ to\ rise\ to\ 20\%
+```
+```math
+20\%\ of\ 3.3V\ output = 660\ mV
+```
+```math
+80\%\ of\ 3.3V\ output = 2.64\ V
+```
+
+Output Rise till 20%
+
+<img src="images/Day3/D3_Lab/Custom_Inv_SPICE_Rise_20.png" alt="Custom_Inv_SPICE_Rise_20" width="100%"/>
+
+Output Rise till 80%
+
+<img src="images/Day3/D3_Lab/Custom_Inv_SPICE_Rise_80.png" alt="Custom_Inv_SPICE_Rise_80" width="100%"/>
+
+```math
+Rise\ transition\ time = 2.23895 - 2.17938 = 0.05957\ ns = 59.57\ ps
+```
+---
+### Fall transition time calculation
+```math
+Fall\ transition\ time = Time\ taken\ for\ output\ to\ fall\ to\ 20\% - Time\ taken\ for\ output\ to\ fall\ to\ 80\%
+```
+```math
+20\%\ of\ 3.3V\ output = 660\ mV
+```
+```math
+80\%\ of\ 3.3V\ output = 2.64\ V
+```
+
+Output Fall till 20%
+
+<img src="images/Day3/D3_Lab/Custom_Inv_SPICE_Fall_20.png" alt="Custom_Inv_SPICE_Fall_20" width="100%"/>
+
+Output Fall till 80%
+
+<img src="images/Day3/D3_Lab/Custom_Inv_SPICE_Fall_80.png" alt="Custom_Inv_SPICE_Fall_80" width="100%"/>
+
+```math
+Fall\ transition\ time = 4.09305 - 4.05025 = 0.0428\ ns = 42.8\ ps
+```
+---
+### Rise Cell Delay Calculation
+```math
+Rise\ Cell\ Delay = Time\ taken\ for\ output\ to\ rise\ to\ 50\% - Time\ taken\ for\ input\ to\ fall\ to\ 50\%
+```
+```math
+50\%\ of\ 3.3\ V = 1.65\ V
+```
+<img src="images/Day3/D3_Lab/Custom_Inv_SPICE_Rise_Delay.png" alt="Custom_Inv_SPICE_Rise_Delay" width="100%"/>
+
+```math
+Rise\ Cell\ Delay = 2.20702 - 2.15041 = 0.05661\ ns = 56.61\ ps
+```
+---
+### Fall Cell Delay Calculation
+```math
+Fall\ Cell\ Delay = Time\ taken\ for\ output\ to\ fall\ to\ 50\% - Time\ taken\ for\ input\ to\ rise\ to\ 50\%
+```
+```math
+50\%\ of\ 3.3\ V = 1.65\ V
+```
+<img src="images/Day3/D3_Lab/Custom_Inv_SPICE_Fall_Delay.png" alt="Custom_Inv_SPICE_Fall_Delay" width="100%"/>
+
+```math
+Fall\ Cell\ Delay = 4.07504 - 4.04992 = 0.02512\ ns = 25.12\ ps
+```
+---
