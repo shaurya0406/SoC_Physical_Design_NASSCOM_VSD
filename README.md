@@ -643,7 +643,7 @@ For more examples and ideas, visit:
  https://docs.docker.com/get-started/
 ```
 
-<img src="images/Docker_Hello_World.png" alt="Docker_Hello_World" width="20%"/>
+<img src="images/Day1/Docker_Hello_World.png" alt="Docker_Hello_World" width="20%"/>
 
 ### Checking Installation Requirements
 In order to check the installation, you can use the following commands:
@@ -689,7 +689,7 @@ options:
 
 Once an environment has been created, you may wish to activate it, e.g. by sourcing an activate script in its bin directory.
 ```
-<img src="images/Check_Requirements.png" alt="Check_Requirements" width="20%"/>
+<img src="images/Day1/Check_Requirements.png" alt="Check_Requirements" width="20%"/>
 
 ## Download and Install OpenLane
 Download OpenLane from GitHub:
@@ -705,7 +705,7 @@ Successful test will output the following line:
 ```
 Basic test passed
 ```
-<img src="images/Make_Test.png" alt="Make_Test" width="20%"/>
+<img src="images/Day1/Make_Test.png" alt="Make_Test" width="20%"/>
 
 ## Viewing Test Design Outputs
 Open the final layout using KLayout. This will open the window of KLayout in editing mode -e with sky130 technology.
@@ -718,7 +718,7 @@ klayout -e -nn $PDK_ROOT/sky130A/libs.tech/klayout/tech/sky130A.lyt \
    -l $PDK_ROOT/sky130A/libs.tech/klayout/tech/sky130A.lyp \
    ./designs/spm/runs/openlane_test/results/final/gds/spm.gds
 ```
-<img src="images/Test_GDS.png" alt="Test_GDS" width="100%"/>
+<img src="images/Day1/Test_GDS.png" alt="Test_GDS" width="100%"/>
 
 ## Leave the Docker
 ```bash
@@ -733,7 +733,7 @@ make mount
 ```
 Your terminal environment should now switch to the OpenLane Container:
 
-<img src="images/OpenLane_Container.png" alt="OpenLane_Container" width="20%"/>
+<img src="images/Day1/OpenLane_Container.png" alt="OpenLane_Container" width="20%"/>
 
 ## Step 2. Running the flow
 The entry point for OpenLane is the `./flow.tcl` script.
@@ -745,7 +745,7 @@ For various arguments to this script, checkout the [Docs](https://openlane.readt
 ```
 The terminal prompt should now change to Tcl Console represeted by `%` symbol:
 
-<img src="images/Flow_Tcl_Console.png" alt="Flow_Tcl_Console" width="20%"/>
+<img src="images/Day1/Flow_Tcl_Console.png" alt="Flow_Tcl_Console" width="20%"/>
 
 ## Step 3. Setup Target Package
 ```bash
@@ -761,7 +761,7 @@ prep -design picorv32a
 ```
 Output:
 
-<img src="images/Prep_Design_Tcl.png" alt="Prep_Design_Tcl" width="20%"/>
+<img src="images/Day1/Prep_Design_Tcl.png" alt="Prep_Design_Tcl" width="20%"/>
 
 ## Prep Design Output Explanation
 
@@ -817,7 +817,7 @@ Runs `yosys` synthesis on the current design as well as `OpenSTA` timing analysi
 ```bash
 run_synthesis
 ```
-<img src="images/Run_Synthesis_Tcl.png" alt="Run_Synthesis_Tcl" width="20%"/>
+<img src="images/Day1/Run_Synthesis_Tcl.png" alt="Run_Synthesis_Tcl" width="20%"/>
 
 Open another Terminal tab/window to analyse the synthesis report.
 
@@ -831,7 +831,7 @@ ll
 ```
 ### Synthesis Report: 
 
-<img src="images/Synthesis_Directory.png" alt="Synthesis_Directory" width="20%"/>
+<img src="images/Day1/Synthesis_Directory.png" alt="Synthesis_Directory" width="20%"/>
 
 After running the `run_synthesis` command in OpenLane, several report files are generated to provide detailed information about the synthesis process, including area usage, statistics, and specific checks. Here's an explanation of each of these report files:
 
@@ -955,7 +955,7 @@ Number of Cells: 16558
 Number of D Flip-Flops: 1613
 Flip-Flop Ratio: 9.7400%
 ```
-<img src="images/FlipFlop_Ratio.png" alt="FlipFlop_Ratio" width="20%"/>
+<img src="images/Day1/FlipFlop_Ratio.png" alt="FlipFlop_Ratio" width="20%"/>
 
 ### Synthesis Results
 After running the synthesis process in OpenLane, two key files are typically generated in the `results/synthesis` folder:
@@ -1004,7 +1004,7 @@ The ABC has done all the mappings!
 ```bash
 less picorv32a.v
 ```
-<img src="images/Synthesised_Netlist.png" alt="Synthesised_Netlist" width="20%"/>
+<img src="images/Day1/Synthesised_Netlist.png" alt="Synthesised_Netlist" width="20%"/>
 
 To quit the `less` window, press `q`
 
@@ -1024,7 +1024,7 @@ less 2-sta.log
 ```
 To quit the `less` window, press `q`
 
-<img src="images/STA_Report.png" alt="STA_Report" width="20%"/>
+<img src="images/Day1/STA_Report.png" alt="STA_Report" width="20%"/>
 
 ---
 
@@ -1258,3 +1258,25 @@ def read picorv32a.def &
 
 <img src="images/Day2/D2_Lab/Placement_Standard_Cells.png" alt="Placement_Standard_Cells" width="100%"/>
 
+# Custom Std Cell Design
+
+ Design standard library cell using Magic and perform timing characterization using NGSpice Tool.
+
+## 1. Clone custom inverter standard cell design from github repository
+
+**Open a new Terminal Tab**
+```bash
+# Change the directory to the "OpenLane" directory in the user's home directory
+cd ~/OpenLane
+
+# Clone the "vsdstdcelldesign" repository from GitHub, which contains standard cell design examples and resources
+git clone https://github.com/nickson-jose/vsdstdcelldesign.git
+
+# Change the directory to the newly cloned "vsdstdcelldesign" directory
+cd vsdstdcelldesign/
+
+# List all files and directories in the current directory in a detailed format
+ll
+```
+
+<img src="images/Day2/D2_Lab/Placement_Standard_Cells.png" alt="Placement_Standard_Cells" width="100%"/>
