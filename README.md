@@ -1658,4 +1658,124 @@ set ::env(EXTRA_LEFS) [glob $::env(OPENLANE_ROOT)/designs/$::env(DESIGN_NAME)/sr
   <img src="images/Day4/D4_Lab/VSD_Inv_Config_Tcl.png" alt="VSD_Inv_Config_Tcl" width="20%"/>
 
 
+# Re-Run OpenLane flow for custom cell design
 
+**Now that a new LEF File for our Custom Cell design has been added, we need to restart our RTL to GDF Flow to genrate the new netlist and so on.**
+
+## 1. Exit & Rerun the current flow.
+
+In the terminal tab, where the `flow.tcl` was running:
+```bash
+# Exit flow.tcl
+exit
+# The terminal prompt should now change from `%` to the `Openlane Container` environment.
+
+./flow.tcl -interactive
+# Terminal Environment should change to Flow.tcl represented by `%`
+```
+
+
+## 2. Prep Design with additional LEF Files
+```bash
+# Load the required OpenLane version 0.9 package to access OpenLane commands and features.
+package require openlane 0.9
+
+# Prepare the design environment for the specified design (picorv32a in this case).
+# The '-tag' option is used to specify a unique run directory tag that identifies this particular run.
+# The '-overwrite' option allows overwriting any existing run directory with the same tag.
+# Example: prep -design picorv32a -tag RUN_2024.08.25_18.46.43 -overwrite
+prep -design picorv32a -tag <RUN_DIR_TAG> -overwrite
+
+# Include additional commands to integrate newly added custom cell LEF files into the OpenLane flow.
+# The 'glob' command is used to get a list of all LEF files in the 'src' directory of the design.
+set lefs [glob $::env(DESIGN_DIR)/src/*.lef]
+
+# The 'add_lefs' command adds the specified LEF files to the design flow, ensuring they are included in subsequent steps.
+add_lefs -src $lefs
+
+# Now that the design is prepared and custom LEF files are included, we can proceed to run the synthesis step.
+# The 'run_synthesis' command will execute the Yosys synthesis process for the prepared design.
+run_synthesis
+```
+<img src="images/Day4/D4_Lab/Custom_Inv_Prep_Synthesis.png" alt="Custom_Inv_Prep_Synthesis" width="20%"/>
+
+## 3. Verify LEF Merge for custom cell
+Check the `<run_path>/tmp/merged.nom.lef` file to confirm whether it contains a new macro for our `sky130_vsdinv` inverter.
+
+<img src="images/Day4/D4_Lab/Custom_Inv_Merged_LEF.png" alt="Custom_Inv_Merged_LEF" width="20%"/>
+
+## 4. Post-Synthesis Timing Analysis
+We need to ensure that we dont have any slack violations after including the new custom inverter cell `sky130_vsdinv`
+
+Analyse `<run_path>/logs/synthesis/2-sta.log` as mentioned in the output of `run_synthesis` step of Openflow. 
+
+**Our hold and setup slack should be possitive or 0**
+
+<img src="images/Day4/D4_Lab/Custom_Inv_Post_Synthesis_STA.png" alt="Custom_Inv_Post_Synthesis_STA" width="20%"/>
+
+## 5. Floorplan with Custom Cell
+As per [OpenLane Floorplan Commands Docs](https://armleo-openlane.readthedocs.io/en/latest/docs/source/openlane_commands.html#floorplan-commands),
+The `run_floorplan` command involves the following:
+
+1. `init_floorplan` : Runs floorplanning on the processed design using the openroad app. The resulting file is under `/<run_path>/tmp/floorplan/`
+
+2. `place_io` : Runs io placement on the design processed using the openroad app. The resulting file is under `/<run_path>/tmp/floorplan/`
+
+3. `tap_decap_or` : Runs tap/decap placement on the design processed using the openroad app. 
+The resulting file is under `/<run_path>/tmp/floorplan/`
+
+4. `gen_pdn` : Runs basic power grid generation on the processed design using the openroad app. The resulting file is under `/<run_path>/tmp/pdn`
+
+But we dont need the 4th step of PDN Generation as of now, so we will run only the first 3 steps individually.
+
+```bash
+init_floorplan
+place_io
+tap_decap_or
+```
+<img src="images/Day4/D4_Lab/Custom_Inv_Floorplan.png" alt="Custom_Inv_Floorplan" width="20%"/>
+
+## 6. Placement with custom cell
+Global placement followed by Detailed Placement
+```bash
+run_placement
+```
+<img src="images/Day4/D4_Lab/Custom_Inv_Run_Placement.png" alt="Custom_Inv_Run_Placement" width="20%"/>
+
+## 7. Verify Placement of Custom Cell in Magic
+In another terminal tab, run the following commands to view the placed design in Magic.
+```bash
+cd <run_path>/results/placement
+
+magic -T <tech_file> lef read ../../tmp/merged.nom.lef def read picorv32a.def &
+# Example:
+# magic -T /home/parallels/.volare/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read picorv32a.def &
+```
+
+<img src="images/Day4/D4_Lab/Custom_Inv_Placement.png" alt="Custom_Inv_Placement" width="100%"/>
+
+Locate the Custom VSD Inverter Cell, somewhere near the white box highlited in the picture.
+
+<img src="images/Day4/D4_Lab/Custom_Inv_Placement_Global.png" alt="Custom_Inv_Placement_Global" width="100%"/>
+
+Zoom in to the box and locate the cell
+
+<img src="images/Day4/D4_Lab/Custom_Inv_Placement_Located.png" alt="Custom_Inv_Placement_Located" width="100%"/>
+
+Command for tkcon window to view internal layers of cells
+```bash
+# Command to view internal connectivity layers
+expand
+```
+
+<img src="images/Day4/D4_Lab/Custom_Inv_Placement_Internal_Layers.png" alt="Custom_Inv_Placement_Internal_Layers" width="100%"/>
+
+## 8. Clock Tree Synthesis (CTS)
+With placement done we are now ready to run CTS in the OpenLane Flow
+```bash
+run_cts
+```
+<img src="images/Day4/D4_Lab/Custom_Inv_CTS_Run.png" alt="Custom_Inv_CTS_Run" width="20%"/>
+
+## 9. Post-CTS OpenRoad Timing Analysis
+Commands to be run in OpenLANE flow to do OpenROAD timing analysis with integrated OpenSTA in OpenROAD
