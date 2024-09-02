@@ -1995,3 +1995,10 @@ ls
 ```
 <img src="images/Day5/D5_Lab/Custom_Inv_SPEF_Extraction.png" alt="Custom_Inv_SPEF_Extraction" width="20%"/>
 
+
+
+# Acknowledgements
+
+* [Kunal Ghosh](https://github.com/kunalg123), Co-founder, VSD Corp. Pvt. Ltd.
+* [Nickson P Jose](https://github.com/nickson-jose), Physical Design Engineer, Intel Corporation.
+* [R. Timothy Edwards](https://github.com/RTimothyEdwards), Senior Vice President of Analog and Design, efabless Corporation.
