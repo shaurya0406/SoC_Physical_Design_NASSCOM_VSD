@@ -1778,4 +1778,11 @@ run_cts
 <img src="images/Day4/D4_Lab/Custom_Inv_CTS_Run.png" alt="Custom_Inv_CTS_Run" width="20%"/>
 
 ## 9. Post-CTS OpenRoad Timing Analysis
-Commands to be run in OpenLANE flow to do OpenROAD timing analysis with integrated OpenSTA in OpenROAD
+
+We need to again check for any slack violations in the STA Analysis done after CTS, log for which will be sotred in the `<run_path>/logs/cts/15-cts_sta.log` file as mentioned in the last line of the output of `run_cts`
+
+The SLACK should be greater than or equal to 0 == SLACK MET Condition
+
+<img src="images/Day4/D4_Lab/Custom_Inv_Post_CTS_STA.png" alt="Custom_Inv_Post_CTS_STA" width="20%"/>
+
+## 10. 
