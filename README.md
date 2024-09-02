@@ -1785,4 +1785,213 @@ The SLACK should be greater than or equal to 0 == SLACK MET Condition
 
 <img src="images/Day4/D4_Lab/Custom_Inv_Post_CTS_STA.png" alt="Custom_Inv_Post_CTS_STA" width="20%"/>
 
-## 10. 
+## 10. PDN Generation
+I was encountering random errors at this stage so had to rerun from scratch the entire flow.
+Here's a summary of all the commands:
+
+```bash
+cd ~/OpenLane
+make mount
+```
+
+Now we enter the Openlane container environment
+
+```bash
+./flow.tcl -interactive
+```
+Now we have entered the Openlane Flow Tcl Interactive Environment
+
+```bash
+package require openlane 0.9
+
+prep -design picorv32a
+
+set lefs [glob $::env(DESIGN_DIR)/src/*.lef]
+add_lefs -src $lefs
+
+run_synthesis
+
+init_floorplan
+place_io
+tap_decap_or
+
+run_placement
+
+run_cts
+
+run_power_grid_generation
+
+gen_pdn
+```
+<img src="images/Day5/D5_Lab/Custom_Inv_PDN_Run.png" alt="Custom_Inv_PDN_Run" width="20%"/>
+
+Once the PDN is generated, you can view it in Magic
+In another terminal tab, run the following commands to view the design with PDN in Magic.
+
+Note that `<run_path>` has now changed.
+```bash
+cd <run_path>/results/floorplan
+
+magic -T <tech_file> lef read ../../tmp/merged.nom.lef def read picorv32a.def &
+# Example:
+# magic -T /home/parallels/.volare/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read picorv32a.def &
+```
+
+<img src="images/Day5/D5_Lab/Custom_Inv_PDN_Magic.png" alt="Custom_Inv_PDN_Magic" width="100%"/>
+
+## 11. Routing
+We will use **Triton Route**
+
+```bash
+run_routing
+```
+<img src="images/Day5/D5_Lab/Custom_Inv_Routing_DRC_Error.png" alt="Custom_Inv_Routing_DRC_Error" width="20%"/>
+
+Got an error: `[ERROR DRT-0085] Valid access pattern combination not found for _24236_`
+After checking the netlist `_24236_ is our custom cell`
+The error code `DRT-0085` tells us that the error was encountered during Detailed Routing (DRT) phase and the router is not able to figure out how it can access all the pins of the instance.
+
+This seems most likely a DRC issue we overlooked earlier.
+
+So lets analyse our Custom VSD Inverter Magic File again for DRC.
+
+## 12. DRC check for Custom Cell
+Open another terminal tab and run the following commands:
+```bash
+cd ~/OpenLane/vsdstdcelldesign
+
+magic -T <tech_file> sky130_vsdinv.mag &
+# Example : 
+# magic -T /home/parallels/.volare/sky130A/libs.tech/magic/sky130A.tech sky130_vsdinv.mag &
+```
+In the tkcon magic window,
+```bash
+drc check
+drc why
+```
+There are 4 DRC Errors regarding sizing of nwell and transistor width, highlighted with white patches.
+
+<img src="images/Day5/D5_Lab/Custom_Inv_DRC_Error.png" alt="Custom_Inv_DRC_Error" width="100%"/>
+
+After fixing them, we will save it in a new mag file and generate the new lef
+
+Tkcon window:
+```bash
+save sky130_vsdinv_drc.mag
+lef write
+```
+<img src="images/Day5/D5_Lab/Custom_Inv_Routing_DRC_Solved.png" alt="Custom_Inv_Routing_DRC_Solved" width="100%"/>
+
+Copy the new LEF to our picorv32a design source folder.
+Terminal Window:
+```bash
+cp sky130_vsdinv.lef ~/OpenLane/designs/picorv32a/src/
+```
+
+## 13. Rerun after solving DRC
+Now we again have to rerun the entire flow to include the new LEF in the netlist.
+
+New Terminal:
+```bash
+cd ~/OpenLane
+make mount
+```
+
+Now we enter the Openlane container environment
+
+```bash
+./flow.tcl -interactive
+```
+Now we have entered the Openlane Flow Tcl Interactive Environment
+
+```bash
+package require openlane 0.9
+
+prep -design picorv32a
+
+set lefs [glob $::env(DESIGN_DIR)/src/*.lef]
+add_lefs -src $lefs
+
+run_synthesis
+
+init_floorplan
+place_io
+tap_decap_or
+
+run_placement
+
+run_cts
+
+run_power_grid_generation
+
+gen_pdn
+
+run_routing
+```
+
+**And its done!**
+
+<img src="images/Day5/D5_Lab/Custom_Inv_Routed_1.png" alt="Custom_Inv_Routed_1" width="50%"/><img src="images/Day5/D5_Lab/Custom_Inv_Routed_2.png" alt="Custom_Inv_Routed_2" width="50%"/>
+
+## 14. View the Final Layout in Magic
+
+Note that `<run_path>` has now changed.
+```bash
+cd <run_path>/results/routing
+
+magic -T <tech_file> lef read ../../tmp/merged.nom.lef def read picorv32a.def &
+# Example:
+# magic -T /home/parallels/.volare/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read picorv32a.def &
+```
+
+<img src="images/Day5/D5_Lab/Custom_Inv_Final_Layout_Magic_1.png" alt="Custom_Inv_Final_Layout_Magic_1" width="50%"/><img src="images/Day5/D5_Lab/Custom_Inv_Final_Layout_Magic_2.png" alt="Custom_Inv_Final_Layout_Magic_2" width="50%"/>
+
+## 15. Post-Route STA Analysis
+This can be found in `logs/routing/24-grt_sta.log`
+
+<img src="images/Day5/D5_Lab/Custom_Inv_Post_Route_STA.png" alt="Custom_Inv_Post_Route_STA" width="50%"/>
+
+## 16. Post-Route parasitic extraction using SPEF Extractor
+
+New Terminal: 
+Install SPEF Extractor
+```bash
+# Home Directory
+cd ~/
+
+# Install Dependencies
+pip install numpy sympy matplotlib
+
+# Clone the SPEF Git Repo
+git clone https://github.com/HanyMoussa/SPEF_EXTRACTOR.git
+
+# Change to SPEF directory
+cd SPEF_EXTRACTOR
+
+# Install
+python3 -m pip install spef-extractor
+
+# Verify Install Location
+ls <spef-extractor_installation_path>
+# Eg: ls /home/parallels/.local/bin
+```
+<img src="images/Day5/D5_Lab/Install_SPEF_Extractor_1.png" alt="Install_SPEF_Extractor_1" width="20%"/><img src="images/Day5/D5_Lab/Install_SPEF_Extractor_2.png" alt="Install_SPEF_Extractor_2" width="20%"/>
+
+Note down the installation path.
+
+Extract SPEF, the output SPEF file will be in the same directory as the def file.
+
+```bash
+# Extract spef
+<spef-extractor_installation_path>/spef_extractor -l <run_path>/tmp/merged.nom.lef -d <run_path>/results/routing/picorv32a.def
+
+# Example:
+# /home/parallels/.local/bin/spef_extractor -l /home/parallels/OpenLane/designs/picorv32a/runs/RUN_2024.09.01_20.18.16/tmp/merged.nom.lef -d /home/parallels/OpenLane/designs/picorv32a/runs/RUN_2024.09.01_20.18.16/results/routing/picorv32a.def
+
+# Verify
+cd <run_path>/results/routing
+
+ls
+```
+<img src="images/Day5/D5_Lab/Custom_Inv_SPEF_Extraction.png" alt="Custom_Inv_SPEF_Extraction" width="20%"/>
+
