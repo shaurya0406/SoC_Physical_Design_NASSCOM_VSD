@@ -2022,12 +2022,12 @@ box
 Spacing (Height) is 0.21 microns, hence incorrect
 
 Fix in Tech File:
-See the Git diff output of Sky130A Tech file
+See the Git diff output of [Sky130A Tech file](drc_tests/sky130A.tech)
 
 Correct DRC Rule
 <img src="images/drc_tests/Poly9_Correct.png" alt="Poly9_Correct" width="100%"/>
 
-
+## 2. [difftap.2]()
 
 
 
