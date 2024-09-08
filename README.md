@@ -2018,12 +2018,16 @@ Poly resistor spacing to poly or spacing (no overlap) to diff/tap = 0.48 microns
 snap int
 box
 ```
+<img src="images/drc_tests/Poly9_Incorrect.png" alt="Poly9_Incorrect" width="100%"/>
 Spacing (Height) is 0.21 microns, hence incorrect
 
 Fix in Tech File:
+See the Git diff output of Sky130A Tech file
+
+Correct DRC Rule
+<img src="images/drc_tests/Poly9_Correct.png" alt="Poly9_Correct" width="100%"/>
 
 
-<img src="images/drc_tests/Poly9_Incorrect.png" alt="Poly9_Incorrect" width="100%"/>
 
 
 

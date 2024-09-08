@@ -4811,8 +4811,10 @@ drc
  spacing allpoly allpoly 210 touching_ok "poly.spacing < %d (poly.2)"
  spacing allpolynonfet alldifflvnonfet 75 corner_ok allfets \
 	"poly.spacing to Diffusion < %d (poly.4a)"
- spacing npres *nsd 480 touching_illegal \
-	"poly.resistor spacing to N-tap < %d (poly.9)"
+ spacing npres alldiff 480 touching_illegal \
+	"poly.resistor spacing to alldiff < %d (poly.9)"
+ spacing npres allpolynonres 480 touching_illegal \
+	"poly.resistor spacing to allpolynonres < %d (poly.9)"
  overhang *ndiff,rndiff nfet,scnfet,npd,npass 250 "N-Diffusion overhang of nmos < %d (poly.7)"
  overhang *mvndiff,mvrndiff mvnfet,mvnnfet 250 \
 	"N-Diffusion overhang of nmos < %d (poly.7)"
@@ -5176,6 +5178,8 @@ variants *
   width uhrpoly 350 "uhrpoly resistor width < %d"
   spacing xhrpoly,uhrpoly,xpc alldiff 480 touching_illegal \
 	"xhrpoly/uhrpoly resistor spacing to diffusion < %d (poly.9)"
+  spacing xhrpoly,uhrpoly,xpc allpolynonres 480 touching_illegal \
+	"xhrpoly/uhrpoly resistor spacing to allpolynonres < %d (poly.9)"
 
 #------------------------------------
 # MOS Varactor device rules
