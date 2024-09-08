@@ -2025,9 +2025,13 @@ Fix in Tech File:
 See the Git diff output of [Sky130A Tech file](drc_tests/sky130A.tech)
 
 Correct DRC Rule
+```bash
+tech load sky13A.tech
+drc check
+drc why
+```
 <img src="images/drc_tests/Poly9_Correct.png" alt="Poly9_Correct" width="100%"/>
 
-## 2. [difftap.2]()
 
 
 
