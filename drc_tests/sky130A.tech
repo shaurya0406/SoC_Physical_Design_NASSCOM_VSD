@@ -1238,6 +1238,12 @@ style drc
  and-not dnwell_shrink
  and-not nwell
 
+ templayer nwell_tapped
+ bloat-all nsc nwell
+
+ templayer nwell_untapped nwell
+ and-not nwell_tapped
+
  # SONOS nFET devices must be in deep nwell
  templayer dnwell_missing nsonos
  and-not dnwell
@@ -4726,6 +4732,11 @@ drc
 
  width allnwell 840 "N-well width < %d (nwell.1)"
  spacing allnwell allnwell 1270 touching_ok "N-well spacing < %d (nwell.2a)"
+
+ variants (full)
+ cifmaxwidth nwell_untapped 0 bend_illegal \
+ "N-well tap is missing (nwell.4)"
+ variants *
 
 #-----------------------------
 # DIFF

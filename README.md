@@ -2014,6 +2014,7 @@ load poly
 <img src="images/drc_tests/Poly9_Rule.png" alt="Poly9_Rule" width="100%"/>
 tkcon window:
 Poly resistor spacing to poly or spacing (no overlap) to diff/tap = 0.48 microns
+
 ```bash
 snap int
 box
@@ -2034,6 +2035,7 @@ drc why
 
 ## 2. [difftap.2](https://skywater-pdk.readthedocs.io/en/main/rules/periphery.html#difftap)
 <img src="images/drc_tests/Difftap_Rule.png" alt="Difftap_Rule" width="100%"/>
+
 ```bash
 load difftap
 ```
@@ -2050,6 +2052,32 @@ drc check
 drc why
 ```
 <img src="images/drc_tests/Difftap_Correct.png" alt="Difftap_Correct" width="100%"/>
+
+## 2. [nwell.4](https://skywater-pdk.readthedocs.io/en/main/rules/periphery.html#nwell)
+<img src="images/drc_tests/nwell_Rule.png" alt="nwell_Rule" width="100%"/>
+
+```bash
+load nwell
+```
+N-well rule not implemented:
+<img src="images/drc_tests/nwell_Incorrect.png" alt="nwell_Incorrect" width="100%"/>
+
+Fix in Tech File:
+See the Git diff output of [Sky130A Tech file](drc_tests/sky130A.tech)
+The rule is only implemented for Full style DRC
+
+Correct DRC Rule:
+```bash
+tech load sky13A.tech
+drc style drc(full)
+drc check
+drc why
+```
+<img src="images/drc_tests/nwell_Correct.png" alt="nwell_Correct" width="100%"/>
+
+After adding tap, error is not shown anymore.
+<img src="images/drc_tests/nwell_tap_Correct.png" alt="nwell_tap_Correct" width="100%"/>
+
 
 # Acknowledgements
 
