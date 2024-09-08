@@ -643,7 +643,7 @@ For more examples and ideas, visit:
  https://docs.docker.com/get-started/
 ```
 
-<img src="images/Day1/Docker_Hello_World.png" alt="Docker_Hello_World" width="20%"/>
+<img src="images/Day1/Docker_Hello_World.png" alt="Docker_Hello_World" width="100%"/>
 
 ### Checking Installation Requirements
 In order to check the installation, you can use the following commands:
@@ -689,7 +689,7 @@ options:
 
 Once an environment has been created, you may wish to activate it, e.g. by sourcing an activate script in its bin directory.
 ```
-<img src="images/Day1/Check_Requirements.png" alt="Check_Requirements" width="20%"/>
+<img src="images/Day1/Check_Requirements.png" alt="Check_Requirements" width="100%"/>
 
 ## Download and Install OpenLane
 Download OpenLane from GitHub:
@@ -705,7 +705,7 @@ Successful test will output the following line:
 ```
 Basic test passed
 ```
-<img src="images/Day1/Make_Test.png" alt="Make_Test" width="20%"/>
+<img src="images/Day1/Make_Test.png" alt="Make_Test" width="100%"/>
 
 ## Viewing Test Design Outputs
 Open the final layout using KLayout. This will open the window of KLayout in editing mode -e with sky130 technology.
@@ -733,7 +733,7 @@ make mount
 ```
 Your terminal environment should now switch to the OpenLane Container:
 
-<img src="images/Day1/OpenLane_Container.png" alt="OpenLane_Container" width="20%"/>
+<img src="images/Day1/OpenLane_Container.png" alt="OpenLane_Container" width="100%"/>
 
 ## Step 2. Running the flow
 The entry point for OpenLane is the `./flow.tcl` script.
@@ -745,7 +745,7 @@ For various arguments to this script, checkout the [Docs](https://openlane.readt
 ```
 The terminal prompt should now change to Tcl Console represeted by `%` symbol:
 
-<img src="images/Day1/Flow_Tcl_Console.png" alt="Flow_Tcl_Console" width="20%"/>
+<img src="images/Day1/Flow_Tcl_Console.png" alt="Flow_Tcl_Console" width="100%"/>
 
 ## Step 3. Setup Target Package
 ```bash
@@ -761,7 +761,7 @@ prep -design picorv32a
 ```
 Output:
 
-<img src="images/Day1/Prep_Design_Tcl.png" alt="Prep_Design_Tcl" width="20%"/>
+<img src="images/Day1/Prep_Design_Tcl.png" alt="Prep_Design_Tcl" width="100%"/>
 
 ## Prep Design Output Explanation
 
@@ -817,7 +817,7 @@ Runs `yosys` synthesis on the current design as well as `OpenSTA` timing analysi
 ```bash
 run_synthesis
 ```
-<img src="images/Day1/Run_Synthesis_Tcl.png" alt="Run_Synthesis_Tcl" width="20%"/>
+<img src="images/Day1/Run_Synthesis_Tcl.png" alt="Run_Synthesis_Tcl" width="100%"/>
 
 Open another Terminal tab/window to analyse the synthesis report.
 
@@ -831,7 +831,7 @@ ll
 ```
 ### Synthesis Report: 
 
-<img src="images/Day1/Synthesis_Directory.png" alt="Synthesis_Directory" width="20%"/>
+<img src="images/Day1/Synthesis_Directory.png" alt="Synthesis_Directory" width="100%"/>
 
 After running the `run_synthesis` command in OpenLane, several report files are generated to provide detailed information about the synthesis process, including area usage, statistics, and specific checks. Here's an explanation of each of these report files:
 
@@ -955,7 +955,7 @@ Number of Cells: 16558
 Number of D Flip-Flops: 1613
 Flip-Flop Ratio: 9.7400%
 ```
-<img src="images/Day1/FlipFlop_Ratio.png" alt="FlipFlop_Ratio" width="20%"/>
+<img src="images/Day1/FlipFlop_Ratio.png" alt="FlipFlop_Ratio" width="100%"/>
 
 ### Synthesis Results
 After running the synthesis process in OpenLane, two key files are typically generated in the `results/synthesis` folder:
@@ -1004,7 +1004,7 @@ The ABC has done all the mappings!
 ```bash
 less picorv32a.v
 ```
-<img src="images/Day1/Synthesised_Netlist.png" alt="Synthesised_Netlist" width="20%"/>
+<img src="images/Day1/Synthesised_Netlist.png" alt="Synthesised_Netlist" width="100%"/>
 
 To quit the `less` window, press `q`
 
@@ -1024,7 +1024,7 @@ less 2-sta.log
 ```
 To quit the `less` window, press `q`
 
-<img src="images/Day1/STA_Report.png" alt="STA_Report" width="20%"/>
+<img src="images/Day1/STA_Report.png" alt="STA_Report" width="100%"/>
 
 ---
 
@@ -1036,7 +1036,7 @@ The resulting files are under `/<run_path>/tmp/floorplan/` and `/<run_path>/resu
 ```bash
 run_floorplan
 ```
-<img src="images/Day2/D2_Lab/Run_Floorplan.png" alt="Run_Floorplan" width="20%"/>
+<img src="images/Day2/D2_Lab/Run_Floorplan.png" alt="Run_Floorplan" width="100%"/>
 
 ### Calculate the Die area
 
@@ -1055,7 +1055,7 @@ less 3-initial_fp.def
 ```
 To quit the `less` window, press `q`
 
-<img src="images/Day2/D2_Lab/Floorplan_DEF_Die_Area.png" alt="Floorplan_DEF_Die_Area" width="20%"/>
+<img src="images/Day2/D2_Lab/Floorplan_DEF_Die_Area.png" alt="Floorplan_DEF_Die_Area" width="100%"/>
 
 According to floorplan def
 ```math
@@ -1101,7 +1101,7 @@ cd magic
 ./configure
 ```
 
-<img src="images/Day2/D2_Lab/Magic_Config.png" alt="Magic_Config" width="20%"/>
+<img src="images/Day2/D2_Lab/Magic_Config.png" alt="Magic_Config" width="100%"/>
 
 Now that we have the necessary dependencies installed, lets compile and install the magic tool.
 
@@ -1130,7 +1130,7 @@ ls
 ```
 You will find 3 `.lef` files:
 
-<img src="images/Day2/D2_Lab/Merged_LEF.png" alt="Merged_LEF" width="20%"/>
+<img src="images/Day2/D2_Lab/Merged_LEF.png" alt="Merged_LEF" width="100%"/>
 
 The files generated by OpenLane in the `tmp` directory, specifically `merged.max.lef`, `merged.min.lef`, and `merged.nom.lef`, are related to the **LEF (Library Exchange Format)** files used during the physical design process. Here’s what each file represents:
 
@@ -1193,7 +1193,7 @@ def read picorv32a.def &
 # Full command Example:
 # magic -T /home/parallels/.volare/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read picorv32a.def &
 ```
-<img src="images/Day2/D2_Lab/Floorplan_Magic_Window.png" alt="Floorplan_Magic_Window" width="50%"/><img src="images/Day2/D2_Lab/Floorplan_Magic_Tkcon_Window.png" alt="Floorplan_Magic_Tkcon_Window" width="50%"/>
+<img src="images/Day2/D2_Lab/Floorplan_Magic_Window.png" alt="Floorplan_Magic_Window" width="100%"/><img src="images/Day2/D2_Lab/Floorplan_Magic_Tkcon_Window.png" alt="Floorplan_Magic_Tkcon_Window" width="100%"/>
 
 #### 6. Check Floorplan Settings:
 - Equidistant IO Port Pin Placement
@@ -1221,7 +1221,7 @@ Run design congestion aware global placement using OpenLANE flow and generate ne
 # Congestion aware placement by default
 run_placement
 ```
-<img src="images/Day2/D2_Lab/Run_Placement.png" alt="Run_Placement" width="20%"/>
+<img src="images/Day2/D2_Lab/Run_Placement.png" alt="Run_Placement" width="100%"/>
 
 ### View Placement in Magic Tool
 #### 1. Navigate to Placement Results directory
@@ -1279,7 +1279,7 @@ cd vsdstdcelldesign/
 ll
 ```
 
-<img src="images/Day3/D3_Lab/Clone_VSD_Inv_Git.png" alt="Clone_VSD_Inv_Git" width="20%"/>
+<img src="images/Day3/D3_Lab/Clone_VSD_Inv_Git.png" alt="Clone_VSD_Inv_Git" width="100%"/>
 
 ## 2. Load Std Cell in Magic
 ```bash
@@ -1374,16 +1374,16 @@ We need to calcluate the following:
 
 ### Rise transition time calculation
 ```math
-Rise\ transition\ time = Time\ taken\ for\ output\ to\ rise\ to\ 80\% - Time\ taken\ for\ output\ to\ rise\ to\ 20\%
+Rise\ transition\ time = Time\ taken\ for\ output\ to\ rise\ to\ 80\% - Time\ taken\ for\ output\ to\ rise\ to\ 100\%
 ```
 ```math
-20\%\ of\ 3.3V\ output = 660\ mV
+100\%\ of\ 3.3V\ output = 660\ mV
 ```
 ```math
 80\%\ of\ 3.3V\ output = 2.64\ V
 ```
 
-Output Rise till 20%
+Output Rise till 100%
 
 <img src="images/Day3/D3_Lab/Custom_Inv_SPICE_Rise_20.png" alt="Custom_Inv_SPICE_Rise_20" width="100%"/>
 
@@ -1397,16 +1397,16 @@ Rise\ transition\ time = 2.23895 - 2.17938 = 0.05957\ ns = 59.57\ ps
 ---
 ### Fall transition time calculation
 ```math
-Fall\ transition\ time = Time\ taken\ for\ output\ to\ fall\ to\ 20\% - Time\ taken\ for\ output\ to\ fall\ to\ 80\%
+Fall\ transition\ time = Time\ taken\ for\ output\ to\ fall\ to\ 100\% - Time\ taken\ for\ output\ to\ fall\ to\ 80\%
 ```
 ```math
-20\%\ of\ 3.3V\ output = 660\ mV
+100\%\ of\ 3.3V\ output = 660\ mV
 ```
 ```math
 80\%\ of\ 3.3V\ output = 2.64\ V
 ```
 
-Output Fall till 20%
+Output Fall till 100%
 
 <img src="images/Day3/D3_Lab/Custom_Inv_SPICE_Fall_20.png" alt="Custom_Inv_SPICE_Fall_20" width="100%"/>
 
@@ -1420,10 +1420,10 @@ Fall\ transition\ time = 4.09305 - 4.05025 = 0.0428\ ns = 42.8\ ps
 ---
 ### Rise Cell Delay Calculation
 ```math
-Rise\ Cell\ Delay = Time\ taken\ for\ output\ to\ rise\ to\ 50\% - Time\ taken\ for\ input\ to\ fall\ to\ 50\%
+Rise\ Cell\ Delay = Time\ taken\ for\ output\ to\ rise\ to\ 100\% - Time\ taken\ for\ input\ to\ fall\ to\ 100\%
 ```
 ```math
-50\%\ of\ 3.3\ V = 1.65\ V
+100\%\ of\ 3.3\ V = 1.65\ V
 ```
 <img src="images/Day3/D3_Lab/Custom_Inv_SPICE_Rise_Delay.png" alt="Custom_Inv_SPICE_Rise_Delay" width="100%"/>
 
@@ -1433,10 +1433,10 @@ Rise\ Cell\ Delay = 2.20702 - 2.15041 = 0.05661\ ns = 56.61\ ps
 ---
 ### Fall Cell Delay Calculation
 ```math
-Fall\ Cell\ Delay = Time\ taken\ for\ output\ to\ fall\ to\ 50\% - Time\ taken\ for\ input\ to\ rise\ to\ 50\%
+Fall\ Cell\ Delay = Time\ taken\ for\ output\ to\ fall\ to\ 100\% - Time\ taken\ for\ input\ to\ rise\ to\ 100\%
 ```
 ```math
-50\%\ of\ 3.3\ V = 1.65\ V
+100\%\ of\ 3.3\ V = 1.65\ V
 ```
 <img src="images/Day3/D3_Lab/Custom_Inv_SPICE_Fall_Delay.png" alt="Custom_Inv_SPICE_Fall_Delay" width="100%"/>
 
@@ -1620,7 +1620,7 @@ View LEF File in terminal
 ```bash
 less sky130_vsdinv.lef
 ```
-<img src="images/Day4/D4_Lab/VSD_Inv_LEF_View.png" alt="VSD_Inv_LEF_View" width="20%"/>
+<img src="images/Day4/D4_Lab/VSD_Inv_LEF_View.png" alt="VSD_Inv_LEF_View" width="100%"/>
 
 **Press `q` to exit less window**
 
@@ -1641,7 +1641,7 @@ cp libs/sky130_fd_sc_hd__* ~/OpenLane/designs/picorv32a/src/
 ll ~/OpenLane/designs/picorv32a/src
 ```
 
-  <img src="images/Day4/D4_Lab/VSD_Inv_LEF_LIB.png" alt="VSD_Inv_LEF_LIB" width="20%"/>
+  <img src="images/Day4/D4_Lab/VSD_Inv_LEF_LIB.png" alt="VSD_Inv_LEF_LIB" width="100%"/>
 
 2. Edit `picorv32a/config.tcl` to change lib file and add the new extra lef into the openlane flow.
 
@@ -1655,7 +1655,7 @@ set ::env(LIB_TYPICAL) "$::env(OPENLANE_ROOT)/designs/picorv32a/src/sky130_fd_sc
 set ::env(EXTRA_LEFS) [glob $::env(OPENLANE_ROOT)/designs/$::env(DESIGN_NAME)/src/*.lef]
 ```
 
-  <img src="images/Day4/D4_Lab/VSD_Inv_Config_Tcl.png" alt="VSD_Inv_Config_Tcl" width="20%"/>
+  <img src="images/Day4/D4_Lab/VSD_Inv_Config_Tcl.png" alt="VSD_Inv_Config_Tcl" width="100%"/>
 
 
 # Re-Run OpenLane flow for custom cell design
@@ -1697,12 +1697,12 @@ add_lefs -src $lefs
 # The 'run_synthesis' command will execute the Yosys synthesis process for the prepared design.
 run_synthesis
 ```
-<img src="images/Day4/D4_Lab/Custom_Inv_Prep_Synthesis.png" alt="Custom_Inv_Prep_Synthesis" width="20%"/>
+<img src="images/Day4/D4_Lab/Custom_Inv_Prep_Synthesis.png" alt="Custom_Inv_Prep_Synthesis" width="100%"/>
 
 ## 3. Verify LEF Merge for custom cell
 Check the `<run_path>/tmp/merged.nom.lef` file to confirm whether it contains a new macro for our `sky130_vsdinv` inverter.
 
-<img src="images/Day4/D4_Lab/Custom_Inv_Merged_LEF.png" alt="Custom_Inv_Merged_LEF" width="20%"/>
+<img src="images/Day4/D4_Lab/Custom_Inv_Merged_LEF.png" alt="Custom_Inv_Merged_LEF" width="100%"/>
 
 ## 4. Post-Synthesis Timing Analysis
 We need to ensure that we dont have any slack violations after including the new custom inverter cell `sky130_vsdinv`
@@ -1711,7 +1711,7 @@ Analyse `<run_path>/logs/synthesis/2-sta.log` as mentioned in the output of `run
 
 **Our hold and setup slack should be possitive or 0**
 
-<img src="images/Day4/D4_Lab/Custom_Inv_Post_Synthesis_STA.png" alt="Custom_Inv_Post_Synthesis_STA" width="20%"/>
+<img src="images/Day4/D4_Lab/Custom_Inv_Post_Synthesis_STA.png" alt="Custom_Inv_Post_Synthesis_STA" width="100%"/>
 
 ## 5. Floorplan with Custom Cell
 As per [OpenLane Floorplan Commands Docs](https://armleo-openlane.readthedocs.io/en/latest/docs/source/openlane_commands.html#floorplan-commands),
@@ -1733,14 +1733,14 @@ init_floorplan
 place_io
 tap_decap_or
 ```
-<img src="images/Day4/D4_Lab/Custom_Inv_Floorplan.png" alt="Custom_Inv_Floorplan" width="20%"/>
+<img src="images/Day4/D4_Lab/Custom_Inv_Floorplan.png" alt="Custom_Inv_Floorplan" width="100%"/>
 
 ## 6. Placement with custom cell
 Global placement followed by Detailed Placement
 ```bash
 run_placement
 ```
-<img src="images/Day4/D4_Lab/Custom_Inv_Run_Placement.png" alt="Custom_Inv_Run_Placement" width="20%"/>
+<img src="images/Day4/D4_Lab/Custom_Inv_Run_Placement.png" alt="Custom_Inv_Run_Placement" width="100%"/>
 
 ## 7. Verify Placement of Custom Cell in Magic
 In another terminal tab, run the following commands to view the placed design in Magic.
@@ -1775,7 +1775,7 @@ With placement done we are now ready to run CTS in the OpenLane Flow
 ```bash
 run_cts
 ```
-<img src="images/Day4/D4_Lab/Custom_Inv_CTS_Run.png" alt="Custom_Inv_CTS_Run" width="20%"/>
+<img src="images/Day4/D4_Lab/Custom_Inv_CTS_Run.png" alt="Custom_Inv_CTS_Run" width="100%"/>
 
 ## 9. Post-CTS OpenRoad Timing Analysis
 
@@ -1783,7 +1783,7 @@ We need to again check for any slack violations in the STA Analysis done after C
 
 The SLACK should be greater than or equal to 0 == SLACK MET Condition
 
-<img src="images/Day4/D4_Lab/Custom_Inv_Post_CTS_STA.png" alt="Custom_Inv_Post_CTS_STA" width="20%"/>
+<img src="images/Day4/D4_Lab/Custom_Inv_Post_CTS_STA.png" alt="Custom_Inv_Post_CTS_STA" width="100%"/>
 
 ## 10. PDN Generation
 I was encountering random errors at this stage so had to rerun from scratch the entire flow.
@@ -1823,7 +1823,7 @@ run_power_grid_generation
 
 gen_pdn
 ```
-<img src="images/Day5/D5_Lab/Custom_Inv_PDN_Run.png" alt="Custom_Inv_PDN_Run" width="20%"/>
+<img src="images/Day5/D5_Lab/Custom_Inv_PDN_Run.png" alt="Custom_Inv_PDN_Run" width="100%"/>
 
 Once the PDN is generated, you can view it in Magic
 In another terminal tab, run the following commands to view the design with PDN in Magic.
@@ -1845,7 +1845,7 @@ We will use **Triton Route**
 ```bash
 run_routing
 ```
-<img src="images/Day5/D5_Lab/Custom_Inv_Routing_DRC_Error.png" alt="Custom_Inv_Routing_DRC_Error" width="20%"/>
+<img src="images/Day5/D5_Lab/Custom_Inv_Routing_DRC_Error.png" alt="Custom_Inv_Routing_DRC_Error" width="100%"/>
 
 Got an error: `[ERROR DRT-0085] Valid access pattern combination not found for _24236_`
 After checking the netlist `_24236_ is our custom cell`
@@ -1931,7 +1931,7 @@ run_routing
 
 **And its done!**
 
-<img src="images/Day5/D5_Lab/Custom_Inv_Routed_1.png" alt="Custom_Inv_Routed_1" width="50%"/><img src="images/Day5/D5_Lab/Custom_Inv_Routed_2.png" alt="Custom_Inv_Routed_2" width="50%"/>
+<img src="images/Day5/D5_Lab/Custom_Inv_Routed_1.png" alt="Custom_Inv_Routed_1" width="100%"/><img src="images/Day5/D5_Lab/Custom_Inv_Routed_2.png" alt="Custom_Inv_Routed_2" width="100%"/>
 
 ## 14. View the Final Layout in Magic
 
@@ -1944,12 +1944,12 @@ magic -T <tech_file> lef read ../../tmp/merged.nom.lef def read picorv32a.def &
 # magic -T /home/parallels/.volare/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read picorv32a.def &
 ```
 
-<img src="images/Day5/D5_Lab/Custom_Inv_Final_Layout_Magic_1.png" alt="Custom_Inv_Final_Layout_Magic_1" width="50%"/><img src="images/Day5/D5_Lab/Custom_Inv_Final_Layout_Magic_2.png" alt="Custom_Inv_Final_Layout_Magic_2" width="50%"/>
+<img src="images/Day5/D5_Lab/Custom_Inv_Final_Layout_Magic_1.png" alt="Custom_Inv_Final_Layout_Magic_1" width="100%"/><img src="images/Day5/D5_Lab/Custom_Inv_Final_Layout_Magic_2.png" alt="Custom_Inv_Final_Layout_Magic_2" width="100%"/>
 
 ## 15. Post-Route STA Analysis
 This can be found in `logs/routing/24-grt_sta.log`
 
-<img src="images/Day5/D5_Lab/Custom_Inv_Post_Route_STA.png" alt="Custom_Inv_Post_Route_STA" width="50%"/>
+<img src="images/Day5/D5_Lab/Custom_Inv_Post_Route_STA.png" alt="Custom_Inv_Post_Route_STA" width="100%"/>
 
 ## 16. Post-Route parasitic extraction using SPEF Extractor
 
@@ -1975,7 +1975,7 @@ python3 -m pip install spef-extractor
 ls <spef-extractor_installation_path>
 # Eg: ls /home/parallels/.local/bin
 ```
-<img src="images/Day5/D5_Lab/Install_SPEF_Extractor_1.png" alt="Install_SPEF_Extractor_1" width="20%"/><img src="images/Day5/D5_Lab/Install_SPEF_Extractor_2.png" alt="Install_SPEF_Extractor_2" width="20%"/>
+<img src="images/Day5/D5_Lab/Install_SPEF_Extractor_1.png" alt="Install_SPEF_Extractor_1" width="100%"/><img src="images/Day5/D5_Lab/Install_SPEF_Extractor_2.png" alt="Install_SPEF_Extractor_2" width="100%"/>
 
 Note down the installation path.
 
@@ -1993,7 +1993,7 @@ cd <run_path>/results/routing
 
 ls
 ```
-<img src="images/Day5/D5_Lab/Custom_Inv_SPEF_Extraction.png" alt="Custom_Inv_SPEF_Extraction" width="20%"/>
+<img src="images/Day5/D5_Lab/Custom_Inv_SPEF_Extraction.png" alt="Custom_Inv_SPEF_Extraction" width="100%"/>
 
 
 
