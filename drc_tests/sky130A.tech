@@ -5185,6 +5185,12 @@ variants *
 # MOS Varactor device rules
 #------------------------------------
 
+ width pmos 420 \
+ "mos transistor minimum width should be < %d (difftap.2)"
+
+ width nmos 420 \
+ "mos transistor minimum width should be < %d (difftap.2)"
+
  overhang *nsd var,varhvt 250 \
  "N-Tap overhang of Varactor < %d (var.4)"
 
