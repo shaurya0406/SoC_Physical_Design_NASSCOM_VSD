@@ -1995,6 +1995,36 @@ ls
 ```
 <img src="images/Day5/D5_Lab/Custom_Inv_SPEF_Extraction.png" alt="Custom_Inv_SPEF_Extraction" width="100%"/>
 
+# Extra: Practice DRC Violations on old Sky130 Tech file.
+
+```bash
+cd ~/
+git clone https://github.com/fayizferosh/soc-design-and-planning-nasscom-vsd/blob/main/drc_tests.tgz
+tar xfz drc_tests.tgz
+cd drc_tests
+magic -d XR &
+```
+tkcon window:
+```bash
+load poly
+```
+<img src="images/drc_tests/Poly.png" alt="Poly" width="100%"/>
+
+## 1. [Poly.9](https://skywater-pdk.readthedocs.io/en/main/rules/periphery.html#poly)
+<img src="images/drc_tests/Poly9_Rule.png" alt="Poly9_Rule" width="100%"/>
+tkcon window:
+Poly resistor spacing to poly or spacing (no overlap) to diff/tap = 0.48 microns
+```bash
+snap int
+box
+```
+Spacing (Height) is 0.21 microns, hence incorrect
+
+Fix in Tech File:
+
+
+<img src="images/drc_tests/Poly9_Incorrect.png" alt="Poly9_Incorrect" width="100%"/>
+
 
 
 # Acknowledgements
